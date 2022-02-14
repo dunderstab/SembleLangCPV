@@ -1,0 +1,516 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> code
+Rule 1     code -> function
+Rule 2     code -> code code
+Rule 3     function -> DEF NAME LPAREN RPAREN statement
+Rule 4     function -> DEF NAME LPAREN RPAREN statementc
+Rule 5     statements -> statement statements
+Rule 6     statements -> statement statement
+Rule 7     statementc -> LBRAC statement RBRAC
+Rule 8     statementc -> LBRAC statements RBRAC
+Rule 9     statementc -> LBRAC empty RBRAC
+Rule 10    statement -> NAME EQUALS expression SEMICOLON
+Rule 11    statement -> RETURN expression SEMICOLON
+Rule 12    expression -> INT
+Rule 13    expression -> NAME
+Rule 14    expression -> expression MUL expression
+Rule 15    expression -> expression DIV expression
+Rule 16    expression -> expression PLUS expression
+Rule 17    expression -> expression MINUS expression
+Rule 18    empty -> <empty>
+
+Terminals, with rules where they appear
+
+DEF                  : 3 4
+DIV                  : 15
+EQUALS               : 10
+INT                  : 12
+LBRAC                : 7 8 9
+LPAREN               : 3 4
+MINUS                : 17
+MUL                  : 14
+NAME                 : 3 4 10 13
+PLUS                 : 16
+RBRAC                : 7 8 9
+RETURN               : 11
+RPAREN               : 3 4
+SEMICOLON            : 10 11
+error                : 
+
+Nonterminals, with rules where they appear
+
+code                 : 2 2 0
+empty                : 9
+expression           : 10 11 14 14 15 15 16 16 17 17
+function             : 1
+statement            : 3 5 6 6 7
+statementc           : 4
+statements           : 5 8
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . code
+    (1) code -> . function
+    (2) code -> . code code
+    (3) function -> . DEF NAME LPAREN RPAREN statement
+    (4) function -> . DEF NAME LPAREN RPAREN statementc
+
+    DEF             shift and go to state 3
+
+    code                           shift and go to state 1
+    function                       shift and go to state 2
+
+state 1
+
+    (0) S' -> code .
+    (2) code -> code . code
+    (1) code -> . function
+    (2) code -> . code code
+    (3) function -> . DEF NAME LPAREN RPAREN statement
+    (4) function -> . DEF NAME LPAREN RPAREN statementc
+
+    DEF             shift and go to state 3
+
+    code                           shift and go to state 4
+    function                       shift and go to state 2
+
+state 2
+
+    (1) code -> function .
+
+    DEF             reduce using rule 1 (code -> function .)
+    $end            reduce using rule 1 (code -> function .)
+
+
+state 3
+
+    (3) function -> DEF . NAME LPAREN RPAREN statement
+    (4) function -> DEF . NAME LPAREN RPAREN statementc
+
+    NAME            shift and go to state 5
+
+
+state 4
+
+    (2) code -> code code .
+    (2) code -> code . code
+    (1) code -> . function
+    (2) code -> . code code
+    (3) function -> . DEF NAME LPAREN RPAREN statement
+    (4) function -> . DEF NAME LPAREN RPAREN statementc
+
+  ! shift/reduce conflict for DEF resolved as shift
+    $end            reduce using rule 2 (code -> code code .)
+    DEF             shift and go to state 3
+
+  ! DEF             [ reduce using rule 2 (code -> code code .) ]
+
+    code                           shift and go to state 4
+    function                       shift and go to state 2
+
+state 5
+
+    (3) function -> DEF NAME . LPAREN RPAREN statement
+    (4) function -> DEF NAME . LPAREN RPAREN statementc
+
+    LPAREN          shift and go to state 6
+
+
+state 6
+
+    (3) function -> DEF NAME LPAREN . RPAREN statement
+    (4) function -> DEF NAME LPAREN . RPAREN statementc
+
+    RPAREN          shift and go to state 7
+
+
+state 7
+
+    (3) function -> DEF NAME LPAREN RPAREN . statement
+    (4) function -> DEF NAME LPAREN RPAREN . statementc
+    (10) statement -> . NAME EQUALS expression SEMICOLON
+    (11) statement -> . RETURN expression SEMICOLON
+    (7) statementc -> . LBRAC statement RBRAC
+    (8) statementc -> . LBRAC statements RBRAC
+    (9) statementc -> . LBRAC empty RBRAC
+
+    NAME            shift and go to state 8
+    RETURN          shift and go to state 11
+    LBRAC           shift and go to state 12
+
+    statement                      shift and go to state 9
+    statementc                     shift and go to state 10
+
+state 8
+
+    (10) statement -> NAME . EQUALS expression SEMICOLON
+
+    EQUALS          shift and go to state 13
+
+
+state 9
+
+    (3) function -> DEF NAME LPAREN RPAREN statement .
+
+    DEF             reduce using rule 3 (function -> DEF NAME LPAREN RPAREN statement .)
+    $end            reduce using rule 3 (function -> DEF NAME LPAREN RPAREN statement .)
+
+
+state 10
+
+    (4) function -> DEF NAME LPAREN RPAREN statementc .
+
+    DEF             reduce using rule 4 (function -> DEF NAME LPAREN RPAREN statementc .)
+    $end            reduce using rule 4 (function -> DEF NAME LPAREN RPAREN statementc .)
+
+
+state 11
+
+    (11) statement -> RETURN . expression SEMICOLON
+    (12) expression -> . INT
+    (13) expression -> . NAME
+    (14) expression -> . expression MUL expression
+    (15) expression -> . expression DIV expression
+    (16) expression -> . expression PLUS expression
+    (17) expression -> . expression MINUS expression
+
+    INT             shift and go to state 15
+    NAME            shift and go to state 16
+
+    expression                     shift and go to state 14
+
+state 12
+
+    (7) statementc -> LBRAC . statement RBRAC
+    (8) statementc -> LBRAC . statements RBRAC
+    (9) statementc -> LBRAC . empty RBRAC
+    (10) statement -> . NAME EQUALS expression SEMICOLON
+    (11) statement -> . RETURN expression SEMICOLON
+    (5) statements -> . statement statements
+    (6) statements -> . statement statement
+    (18) empty -> .
+
+    NAME            shift and go to state 8
+    RETURN          shift and go to state 11
+    RBRAC           reduce using rule 18 (empty -> .)
+
+    statement                      shift and go to state 17
+    statements                     shift and go to state 18
+    empty                          shift and go to state 19
+
+state 13
+
+    (10) statement -> NAME EQUALS . expression SEMICOLON
+    (12) expression -> . INT
+    (13) expression -> . NAME
+    (14) expression -> . expression MUL expression
+    (15) expression -> . expression DIV expression
+    (16) expression -> . expression PLUS expression
+    (17) expression -> . expression MINUS expression
+
+    INT             shift and go to state 15
+    NAME            shift and go to state 16
+
+    expression                     shift and go to state 20
+
+state 14
+
+    (11) statement -> RETURN expression . SEMICOLON
+    (14) expression -> expression . MUL expression
+    (15) expression -> expression . DIV expression
+    (16) expression -> expression . PLUS expression
+    (17) expression -> expression . MINUS expression
+
+    SEMICOLON       shift and go to state 21
+    MUL             shift and go to state 22
+    DIV             shift and go to state 23
+    PLUS            shift and go to state 24
+    MINUS           shift and go to state 25
+
+
+state 15
+
+    (12) expression -> INT .
+
+    SEMICOLON       reduce using rule 12 (expression -> INT .)
+    MUL             reduce using rule 12 (expression -> INT .)
+    DIV             reduce using rule 12 (expression -> INT .)
+    PLUS            reduce using rule 12 (expression -> INT .)
+    MINUS           reduce using rule 12 (expression -> INT .)
+
+
+state 16
+
+    (13) expression -> NAME .
+
+    SEMICOLON       reduce using rule 13 (expression -> NAME .)
+    MUL             reduce using rule 13 (expression -> NAME .)
+    DIV             reduce using rule 13 (expression -> NAME .)
+    PLUS            reduce using rule 13 (expression -> NAME .)
+    MINUS           reduce using rule 13 (expression -> NAME .)
+
+
+state 17
+
+    (7) statementc -> LBRAC statement . RBRAC
+    (5) statements -> statement . statements
+    (6) statements -> statement . statement
+    (5) statements -> . statement statements
+    (6) statements -> . statement statement
+    (10) statement -> . NAME EQUALS expression SEMICOLON
+    (11) statement -> . RETURN expression SEMICOLON
+
+    RBRAC           shift and go to state 27
+    NAME            shift and go to state 8
+    RETURN          shift and go to state 11
+
+    statement                      shift and go to state 26
+    statements                     shift and go to state 28
+
+state 18
+
+    (8) statementc -> LBRAC statements . RBRAC
+
+    RBRAC           shift and go to state 29
+
+
+state 19
+
+    (9) statementc -> LBRAC empty . RBRAC
+
+    RBRAC           shift and go to state 30
+
+
+state 20
+
+    (10) statement -> NAME EQUALS expression . SEMICOLON
+    (14) expression -> expression . MUL expression
+    (15) expression -> expression . DIV expression
+    (16) expression -> expression . PLUS expression
+    (17) expression -> expression . MINUS expression
+
+    SEMICOLON       shift and go to state 31
+    MUL             shift and go to state 22
+    DIV             shift and go to state 23
+    PLUS            shift and go to state 24
+    MINUS           shift and go to state 25
+
+
+state 21
+
+    (11) statement -> RETURN expression SEMICOLON .
+
+    DEF             reduce using rule 11 (statement -> RETURN expression SEMICOLON .)
+    $end            reduce using rule 11 (statement -> RETURN expression SEMICOLON .)
+    RBRAC           reduce using rule 11 (statement -> RETURN expression SEMICOLON .)
+    NAME            reduce using rule 11 (statement -> RETURN expression SEMICOLON .)
+    RETURN          reduce using rule 11 (statement -> RETURN expression SEMICOLON .)
+
+
+state 22
+
+    (14) expression -> expression MUL . expression
+    (12) expression -> . INT
+    (13) expression -> . NAME
+    (14) expression -> . expression MUL expression
+    (15) expression -> . expression DIV expression
+    (16) expression -> . expression PLUS expression
+    (17) expression -> . expression MINUS expression
+
+    INT             shift and go to state 15
+    NAME            shift and go to state 16
+
+    expression                     shift and go to state 32
+
+state 23
+
+    (15) expression -> expression DIV . expression
+    (12) expression -> . INT
+    (13) expression -> . NAME
+    (14) expression -> . expression MUL expression
+    (15) expression -> . expression DIV expression
+    (16) expression -> . expression PLUS expression
+    (17) expression -> . expression MINUS expression
+
+    INT             shift and go to state 15
+    NAME            shift and go to state 16
+
+    expression                     shift and go to state 33
+
+state 24
+
+    (16) expression -> expression PLUS . expression
+    (12) expression -> . INT
+    (13) expression -> . NAME
+    (14) expression -> . expression MUL expression
+    (15) expression -> . expression DIV expression
+    (16) expression -> . expression PLUS expression
+    (17) expression -> . expression MINUS expression
+
+    INT             shift and go to state 15
+    NAME            shift and go to state 16
+
+    expression                     shift and go to state 34
+
+state 25
+
+    (17) expression -> expression MINUS . expression
+    (12) expression -> . INT
+    (13) expression -> . NAME
+    (14) expression -> . expression MUL expression
+    (15) expression -> . expression DIV expression
+    (16) expression -> . expression PLUS expression
+    (17) expression -> . expression MINUS expression
+
+    INT             shift and go to state 15
+    NAME            shift and go to state 16
+
+    expression                     shift and go to state 35
+
+state 26
+
+    (6) statements -> statement statement .
+    (5) statements -> statement . statements
+    (6) statements -> statement . statement
+    (5) statements -> . statement statements
+    (6) statements -> . statement statement
+    (10) statement -> . NAME EQUALS expression SEMICOLON
+    (11) statement -> . RETURN expression SEMICOLON
+
+    RBRAC           reduce using rule 6 (statements -> statement statement .)
+    NAME            shift and go to state 8
+    RETURN          shift and go to state 11
+
+    statement                      shift and go to state 26
+    statements                     shift and go to state 28
+
+state 27
+
+    (7) statementc -> LBRAC statement RBRAC .
+
+    DEF             reduce using rule 7 (statementc -> LBRAC statement RBRAC .)
+    $end            reduce using rule 7 (statementc -> LBRAC statement RBRAC .)
+
+
+state 28
+
+    (5) statements -> statement statements .
+
+    RBRAC           reduce using rule 5 (statements -> statement statements .)
+
+
+state 29
+
+    (8) statementc -> LBRAC statements RBRAC .
+
+    DEF             reduce using rule 8 (statementc -> LBRAC statements RBRAC .)
+    $end            reduce using rule 8 (statementc -> LBRAC statements RBRAC .)
+
+
+state 30
+
+    (9) statementc -> LBRAC empty RBRAC .
+
+    DEF             reduce using rule 9 (statementc -> LBRAC empty RBRAC .)
+    $end            reduce using rule 9 (statementc -> LBRAC empty RBRAC .)
+
+
+state 31
+
+    (10) statement -> NAME EQUALS expression SEMICOLON .
+
+    DEF             reduce using rule 10 (statement -> NAME EQUALS expression SEMICOLON .)
+    $end            reduce using rule 10 (statement -> NAME EQUALS expression SEMICOLON .)
+    RBRAC           reduce using rule 10 (statement -> NAME EQUALS expression SEMICOLON .)
+    NAME            reduce using rule 10 (statement -> NAME EQUALS expression SEMICOLON .)
+    RETURN          reduce using rule 10 (statement -> NAME EQUALS expression SEMICOLON .)
+
+
+state 32
+
+    (14) expression -> expression MUL expression .
+    (14) expression -> expression . MUL expression
+    (15) expression -> expression . DIV expression
+    (16) expression -> expression . PLUS expression
+    (17) expression -> expression . MINUS expression
+
+    SEMICOLON       reduce using rule 14 (expression -> expression MUL expression .)
+    MUL             reduce using rule 14 (expression -> expression MUL expression .)
+    DIV             reduce using rule 14 (expression -> expression MUL expression .)
+    PLUS            reduce using rule 14 (expression -> expression MUL expression .)
+    MINUS           reduce using rule 14 (expression -> expression MUL expression .)
+
+  ! MUL             [ shift and go to state 22 ]
+  ! DIV             [ shift and go to state 23 ]
+  ! PLUS            [ shift and go to state 24 ]
+  ! MINUS           [ shift and go to state 25 ]
+
+
+state 33
+
+    (15) expression -> expression DIV expression .
+    (14) expression -> expression . MUL expression
+    (15) expression -> expression . DIV expression
+    (16) expression -> expression . PLUS expression
+    (17) expression -> expression . MINUS expression
+
+    SEMICOLON       reduce using rule 15 (expression -> expression DIV expression .)
+    MUL             reduce using rule 15 (expression -> expression DIV expression .)
+    DIV             reduce using rule 15 (expression -> expression DIV expression .)
+    PLUS            reduce using rule 15 (expression -> expression DIV expression .)
+    MINUS           reduce using rule 15 (expression -> expression DIV expression .)
+
+  ! MUL             [ shift and go to state 22 ]
+  ! DIV             [ shift and go to state 23 ]
+  ! PLUS            [ shift and go to state 24 ]
+  ! MINUS           [ shift and go to state 25 ]
+
+
+state 34
+
+    (16) expression -> expression PLUS expression .
+    (14) expression -> expression . MUL expression
+    (15) expression -> expression . DIV expression
+    (16) expression -> expression . PLUS expression
+    (17) expression -> expression . MINUS expression
+
+    SEMICOLON       reduce using rule 16 (expression -> expression PLUS expression .)
+    PLUS            reduce using rule 16 (expression -> expression PLUS expression .)
+    MINUS           reduce using rule 16 (expression -> expression PLUS expression .)
+    MUL             shift and go to state 22
+    DIV             shift and go to state 23
+
+  ! MUL             [ reduce using rule 16 (expression -> expression PLUS expression .) ]
+  ! DIV             [ reduce using rule 16 (expression -> expression PLUS expression .) ]
+  ! PLUS            [ shift and go to state 24 ]
+  ! MINUS           [ shift and go to state 25 ]
+
+
+state 35
+
+    (17) expression -> expression MINUS expression .
+    (14) expression -> expression . MUL expression
+    (15) expression -> expression . DIV expression
+    (16) expression -> expression . PLUS expression
+    (17) expression -> expression . MINUS expression
+
+    SEMICOLON       reduce using rule 17 (expression -> expression MINUS expression .)
+    PLUS            reduce using rule 17 (expression -> expression MINUS expression .)
+    MINUS           reduce using rule 17 (expression -> expression MINUS expression .)
+    MUL             shift and go to state 22
+    DIV             shift and go to state 23
+
+  ! MUL             [ reduce using rule 17 (expression -> expression MINUS expression .) ]
+  ! DIV             [ reduce using rule 17 (expression -> expression MINUS expression .) ]
+  ! PLUS            [ shift and go to state 24 ]
+  ! MINUS           [ shift and go to state 25 ]
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for DEF in state 4 resolved as shift
