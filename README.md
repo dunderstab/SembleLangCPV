@@ -6,4 +6,4 @@ For updates or questions, await the semblelang official website for more informa
 
 Duck typing, faster than C.
 
-- DS
+Your friend, DS
