@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftPLUSMINUSleftMULDIVDEF DIV EQUALS INT LBRAC LPAREN MINUS MUL NAME PLUS RBRAC RETURN RPAREN SEMICOLON\n    code : function\n         | code code\n    \n    function : DEF NAME LPAREN RPAREN statement\n             | DEF NAME LPAREN RPAREN statementc\n    \n    statements : statement statements\n               | statement statement\n    \n    statementc : LBRAC statement RBRAC\n               | LBRAC statements RBRAC\n               | LBRAC empty RBRAC\n    \n    statement : NAME EQUALS expression SEMICOLON\n    \n    statement : RETURN expression SEMICOLON\n    \n    expression : INT\n               | NAME\n    \n    expression : expression MUL expression\n               | expression DIV expression\n               | expression PLUS expression\n               | expression MINUS expression\n    \n    empty :\n    '
+_lr_signature = 'leftPLUSMINUSleftMULDIVCOMMA DEF DIV EQUALS INT LBRAC LPAREN MINUS MUL NAME PLUS RBRAC RETURN RPAREN SEMICOLON STRING\n    code : function\n         | code code\n    \n    function : DEF NAME LPAREN RPAREN statement\n             | DEF NAME LPAREN RPAREN statementc\n    \n    function : DEF NAME LPAREN NAME RPAREN statement\n             | DEF NAME LPAREN NAME RPAREN statementc\n    \n    function : DEF NAME LPAREN args RPAREN statement\n             | DEF NAME LPAREN args RPAREN statementc\n    \n  args : args COMMA NAME\n  \n  args : NAME COMMA NAME\n  \n  argse : argse COMMA expression\n  \n  argse : expression COMMA expression\n  \n    statement : NAME LPAREN RPAREN SEMICOLON\n    \n    statement : NAME LPAREN argse RPAREN SEMICOLON\n    \n    statement : NAME LPAREN expression RPAREN SEMICOLON\n    \n    statements : statement statements\n               | statement statement\n    \n    statementc : LBRAC statement RBRAC\n               | LBRAC statements RBRAC\n               | LBRAC empty RBRAC\n    \n    statement : NAME EQUALS expression SEMICOLON\n    \n    statement : RETURN expression SEMICOLON\n    \n    expression : INT\n               | NAME\n    \n  expression : STRING\n  \n    expression : expression MUL expression\n               | expression DIV expression\n               | expression PLUS expression\n               | expression MINUS expression\n    \n    empty :\n    '
     
-_lr_action_items = {'DEF':([0,1,2,4,9,10,21,27,29,30,31,],[3,3,-1,3,-3,-4,-11,-7,-8,-9,-10,]),'$end':([1,2,4,9,10,21,27,29,30,31,],[0,-1,-2,-3,-4,-11,-7,-8,-9,-10,]),'NAME':([3,7,11,12,13,17,21,22,23,24,25,26,31,],[5,8,16,8,16,8,-11,16,16,16,16,8,-10,]),'LPAREN':([5,],[6,]),'RPAREN':([6,],[7,]),'RETURN':([7,12,17,21,26,31,],[11,11,11,-11,11,-10,]),'LBRAC':([7,],[12,]),'EQUALS':([8,],[13,]),'INT':([11,13,22,23,24,25,],[15,15,15,15,15,15,]),'RBRAC':([12,17,18,19,21,26,28,31,],[-18,27,29,30,-11,-6,-5,-10,]),'SEMICOLON':([14,15,16,20,32,33,34,35,],[21,-12,-13,31,-14,-15,-16,-17,]),'MUL':([14,15,16,20,32,33,34,35,],[22,-12,-13,22,-14,-15,22,22,]),'DIV':([14,15,16,20,32,33,34,35,],[23,-12,-13,23,-14,-15,23,23,]),'PLUS':([14,15,16,20,32,33,34,35,],[24,-12,-13,24,-14,-15,-16,-17,]),'MINUS':([14,15,16,20,32,33,34,35,],[25,-12,-13,25,-14,-15,-16,-17,]),}
+_lr_action_items = {'DEF':([0,1,2,4,13,14,19,20,31,32,38,44,46,47,48,53,58,60,],[3,3,-1,3,-3,-4,-5,-6,-7,-8,-22,-18,-19,-20,-13,-21,-14,-15,]),'$end':([1,2,4,13,14,19,20,31,32,38,44,46,47,48,53,58,60,],[0,-1,-2,-3,-4,-5,-6,-7,-8,-22,-18,-19,-20,-13,-21,-14,-15,]),'NAME':([3,6,8,10,11,15,16,17,18,22,23,28,38,39,40,41,42,43,48,50,52,53,58,60,],[5,7,12,12,21,26,12,12,33,26,26,12,-22,26,26,26,26,12,-13,26,26,-21,-14,-15,]),'LPAREN':([5,12,],[6,22,]),'RPAREN':([6,7,9,21,22,25,26,27,33,35,36,54,55,56,57,59,61,],[8,10,17,-10,34,-23,-24,-25,-9,49,51,-26,-27,-28,-29,-11,-12,]),'COMMA':([7,9,21,25,26,27,33,35,36,54,55,56,57,59,61,],[11,18,-10,-23,-24,-25,-9,50,52,-26,-27,-28,-29,-11,-12,]),'RETURN':([8,10,16,17,28,38,43,48,53,58,60,],[15,15,15,15,15,-22,15,-13,-21,-14,-15,]),'LBRAC':([8,10,17,],[16,16,16,]),'EQUALS':([12,],[23,]),'INT':([15,22,23,39,40,41,42,50,52,],[25,25,25,25,25,25,25,25,25,]),'STRING':([15,22,23,39,40,41,42,50,52,],[27,27,27,27,27,27,27,27,27,]),'RBRAC':([16,28,29,30,38,43,45,48,53,58,60,],[-30,44,46,47,-22,-17,-16,-13,-21,-14,-15,]),'SEMICOLON':([24,25,26,27,34,37,49,51,54,55,56,57,],[38,-23,-24,-25,48,53,58,60,-26,-27,-28,-29,]),'MUL':([24,25,26,27,36,37,54,55,56,57,59,61,],[39,-23,-24,-25,39,39,-26,-27,39,39,39,39,]),'DIV':([24,25,26,27,36,37,54,55,56,57,59,61,],[40,-23,-24,-25,40,40,-26,-27,40,40,40,40,]),'PLUS':([24,25,26,27,36,37,54,55,56,57,59,61,],[41,-23,-24,-25,41,41,-26,-27,-28,-29,41,41,]),'MINUS':([24,25,26,27,36,37,54,55,56,57,59,61,],[42,-23,-24,-25,42,42,-26,-27,-28,-29,42,42,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'code':([0,1,4,],[1,4,4,]),'function':([0,1,4,],[2,2,2,]),'statement':([7,12,17,26,],[9,17,26,26,]),'statementc':([7,],[10,]),'expression':([11,13,22,23,24,25,],[14,20,32,33,34,35,]),'statements':([12,17,26,],[18,28,28,]),'empty':([12,],[19,]),}
+_lr_goto_items = {'code':([0,1,4,],[1,4,4,]),'function':([0,1,4,],[2,2,2,]),'args':([6,],[9,]),'statement':([8,10,16,17,28,43,],[13,19,28,31,43,43,]),'statementc':([8,10,17,],[14,20,32,]),'expression':([15,22,23,39,40,41,42,50,52,],[24,36,37,54,55,56,57,59,61,]),'statements':([16,28,43,],[29,45,45,]),'empty':([16,],[30,]),'argse':([22,],[35,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,22 +27,34 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> code","S'",1,None,None,None),
-  ('code -> function','code',1,'p_code','main.py',81),
-  ('code -> code code','code',2,'p_code','main.py',82),
-  ('function -> DEF NAME LPAREN RPAREN statement','function',5,'p_function','main.py',88),
-  ('function -> DEF NAME LPAREN RPAREN statementc','function',5,'p_function','main.py',89),
-  ('statements -> statement statements','statements',2,'p_statements','main.py',95),
-  ('statements -> statement statement','statements',2,'p_statements','main.py',96),
-  ('statementc -> LBRAC statement RBRAC','statementc',3,'p_statementc','main.py',102),
-  ('statementc -> LBRAC statements RBRAC','statementc',3,'p_statementc','main.py',103),
-  ('statementc -> LBRAC empty RBRAC','statementc',3,'p_statementc','main.py',104),
-  ('statement -> NAME EQUALS expression SEMICOLON','statement',4,'p_statementvardef','main.py',111),
-  ('statement -> RETURN expression SEMICOLON','statement',3,'p_statementreturn','main.py',116),
-  ('expression -> INT','expression',1,'p_expression_basic','main.py',122),
-  ('expression -> NAME','expression',1,'p_expression_basic','main.py',123),
-  ('expression -> expression MUL expression','expression',3,'p_expression_primitive','main.py',129),
-  ('expression -> expression DIV expression','expression',3,'p_expression_primitive','main.py',130),
-  ('expression -> expression PLUS expression','expression',3,'p_expression_primitive','main.py',131),
-  ('expression -> expression MINUS expression','expression',3,'p_expression_primitive','main.py',132),
-  ('empty -> <empty>','empty',0,'p_empty','main.py',142),
+  ('code -> function','code',1,'p_code','main.py',89),
+  ('code -> code code','code',2,'p_code','main.py',90),
+  ('function -> DEF NAME LPAREN RPAREN statement','function',5,'p_functionnoargs','main.py',96),
+  ('function -> DEF NAME LPAREN RPAREN statementc','function',5,'p_functionnoargs','main.py',97),
+  ('function -> DEF NAME LPAREN NAME RPAREN statement','function',6,'p_functiononearg','main.py',103),
+  ('function -> DEF NAME LPAREN NAME RPAREN statementc','function',6,'p_functiononearg','main.py',104),
+  ('function -> DEF NAME LPAREN args RPAREN statement','function',6,'p_functionmanyargs','main.py',110),
+  ('function -> DEF NAME LPAREN args RPAREN statementc','function',6,'p_functionmanyargs','main.py',111),
+  ('args -> args COMMA NAME','args',3,'p_args','main.py',127),
+  ('args -> NAME COMMA NAME','args',3,'p_argso','main.py',134),
+  ('argse -> argse COMMA expression','argse',3,'p_argse','main.py',140),
+  ('argse -> expression COMMA expression','argse',3,'p_argseo','main.py',147),
+  ('statement -> NAME LPAREN RPAREN SEMICOLON','statement',4,'p_st_fcallna','main.py',154),
+  ('statement -> NAME LPAREN argse RPAREN SEMICOLON','statement',5,'p_st_fcall','main.py',160),
+  ('statement -> NAME LPAREN expression RPAREN SEMICOLON','statement',5,'p_st_fcalla','main.py',166),
+  ('statements -> statement statements','statements',2,'p_statements','main.py',173),
+  ('statements -> statement statement','statements',2,'p_statements','main.py',174),
+  ('statementc -> LBRAC statement RBRAC','statementc',3,'p_statementc','main.py',180),
+  ('statementc -> LBRAC statements RBRAC','statementc',3,'p_statementc','main.py',181),
+  ('statementc -> LBRAC empty RBRAC','statementc',3,'p_statementc','main.py',182),
+  ('statement -> NAME EQUALS expression SEMICOLON','statement',4,'p_statementvardef','main.py',189),
+  ('statement -> RETURN expression SEMICOLON','statement',3,'p_statementreturn','main.py',194),
+  ('expression -> INT','expression',1,'p_expression_basic','main.py',200),
+  ('expression -> NAME','expression',1,'p_expression_basic','main.py',201),
+  ('expression -> STRING','expression',1,'p_expression_str','main.py',207),
+  ('expression -> expression MUL expression','expression',3,'p_expression_primitive','main.py',215),
+  ('expression -> expression DIV expression','expression',3,'p_expression_primitive','main.py',216),
+  ('expression -> expression PLUS expression','expression',3,'p_expression_primitive','main.py',217),
+  ('expression -> expression MINUS expression','expression',3,'p_expression_primitive','main.py',218),
+  ('empty -> <empty>','empty',0,'p_empty','main.py',228),
 ]

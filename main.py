@@ -36,7 +36,8 @@ tokens = [
     "RBRAC",
     "LPAREN",
     "RPAREN",
-    "COMMA"
+    "COMMA",
+    "STRING"
 ] + list(reserved.values())
 
 t_PLUS = r"\+"
@@ -57,6 +58,11 @@ precedence = (
     ("left", "PLUS", "MINUS"),
     ("left", "MUL", "DIV")
 )
+
+def t_STRING(t):
+    r'\"[^\"]*\"'
+    t.value = str(t.value[1:][:-1])
+    return t
 
 def t_NAME(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
@@ -90,27 +96,77 @@ def p_functionnoargs(p):
     function : DEF NAME LPAREN RPAREN statement
              | DEF NAME LPAREN RPAREN statementc
     '''
-    p[0] = ("function", p[5], p[2], None)
+    p[0] = ("function", p[5], p[2], [], False)
 
 def p_functiononearg(p):
     '''
-    function : DEF NAME LPAREN expression RPAREN statement
-             | DEF NAME LPAREN expression RPAREN statementc
+    function : DEF NAME LPAREN NAME RPAREN statement
+             | DEF NAME LPAREN NAME RPAREN statementc
     '''
-    p[0] = ("function", p[6], p[2], [p[4]])
+    p[0] = ("function", p[6], p[2], [p[4]], True)
 
 def p_functionmanyargs(p):
     '''
-    function : DEF NAME LPAREN explist RPAREN statement
-             | DEF NAME LPAREN explist RPAREN statementc
+    function : DEF NAME LPAREN args RPAREN statement
+             | DEF NAME LPAREN args RPAREN statementc
     '''
-    p[0] = ("function", p[6], p[2], p[4])
+    p[0] = ("function", p[6], p[2], p[4], False)
 
-def p_explist(p):
+def unpack(l):
+    x = l[0]
+    y = l[1]
+    if type(x) == list:
+        print(unpack(x) + [y])
+        return unpack(x) + [y]
+    else:
+        return l
+
+
+def p_args(p):
+  '''
+  args : args COMMA NAME
+  '''
+  #print("!!! {} ".format(p[1]))
+  p[0] = unpack(p[1]) + [p[3]]
+
+def p_argso(p):
+  '''
+  args : NAME COMMA NAME
+  '''
+  p[0] = [p[1], p[3]]
+
+def p_argse(p):
+  '''
+  argse : argse COMMA expression
+  '''
+  #print("!!! {} ".format(p[1]))
+  p[0] = unpack(p[1]) + [p[3]]
+
+def p_argseo(p):
+  '''
+  argse : expression COMMA expression
+  '''
+  p[0] = [p[1], p[3]]
+
+
+def p_st_fcallna(p):
     '''
-    explist : expression COMMA expression
-            | explist COMMA expression
+    statement : NAME LPAREN RPAREN SEMICOLON
     '''
+    p[0] = ("fcall", p[1], False)
+
+def p_st_fcall(p):
+    '''
+    statement : NAME LPAREN argse RPAREN SEMICOLON
+    '''
+    p[0] = ("fcall", p[1], p[3])
+
+def p_st_fcalla(p):
+    '''
+    statement : NAME LPAREN expression RPAREN SEMICOLON
+    '''
+    p[0] = ("fcall", p[1], [p[3]])
+    print(p[0])
 
 def p_statements(p):
     '''
@@ -145,6 +201,14 @@ def p_expression_basic(p):
                | NAME
     '''
     p[0] = p[1]
+
+def p_expression_str(p):
+  '''
+  expression : STRING
+  '''
+  p[0] = Str(p[1])
+
+
 
 def p_expression_primitive(p):
     '''
@@ -189,6 +253,14 @@ def p_error(p):
         yacc.errok()
         exit(1)
 
+class Str:
+    def __init__(self, value):
+        self.value = value
+    def __repr__(self):
+        return "<Str = {}>".format(self.value)
+    def __str__(self):
+        return "<Str = {}>".format(self.value)
+
 parser = yacc.yacc()
 
 currentFunc = "main"
@@ -196,10 +268,24 @@ currentFunc = "main"
 funcs = {
 }
 funcVars = {}
+funcArgs = {}
 MPN = 0
-
+data = {}
 currentFuncVarVal = 4
-funcVarCount = {"main": 0}
+funcVarCount = {}
+
+def grabTup(tup):
+  x = []
+  for i in tup:
+    if type(i) == tuple or type(i) == list:
+      x += grabTup(i)
+    else:
+      x.append(i)
+  return x
+
+
+def Reverse(lst):
+    return [ele for ele in reversed(lst)]
 
 
 def asm(s):
@@ -209,10 +295,10 @@ def asm(s):
         e_error("Must be inside a function to execute code!")
 
 def e_error(e):
-  print("Eval error: {}".format(e))
+  quit("Eval error: {}".format(e))
 
 def eval(p):
-    global currentFunc, funcVars, funcVarCount, currentFuncVarVal, Lerrors
+    global currentFunc, funcVars, funcVarCount, currentFuncVarVal, Lerrors, data, MPN
     if Lerrors:
         quit("Lexing error!")
     
@@ -226,16 +312,44 @@ def eval(p):
         funcVars = {}
 
         currentFuncVarVal = 4
-        funcVarCount = {p[2]: 0}
+        funcVarCount[p[2]] = 0
         currentFunc = p[2]
         funcs[p[2]] = []
+        a = 8
+        ini = False
+        for arg in grabTup(p[3]):
+          ini = True
+          funcVars[arg] = "{}(%ebp)".format(a)
+          a += 4
+        if ini:
+          funcArgs[currentFunc] = a - 4
+        else:
+          funcArgs[currentFunc] = 8          
         eval(p[1])
+    
+
     elif p[0] == "statementc":
         eval(p[1])
 
     elif p[0] == "statements":
         eval(p[1])
         eval(p[2])
+
+    elif p[0] == "fcall":
+        print(p)
+        n = 0
+        for i in Reverse(p[2]):
+            n += 1
+            print(i)
+            eval(i)
+            asm("pushl %ecx")
+        #if p[1] in funcs.keys()
+        if True:
+            asm("call {}".format(p[1]))
+            for i in range(n):
+                asm("popl %ebx")
+        # else:
+        #    e_error("Function Error: Undefined function {}".format(p[1]))
     
     elif p[0] == "return":
         eval(p[1])
@@ -298,6 +412,14 @@ def eval(p):
         else:
             e_error("Variable '{}' referenced before assignment!".format(p))
         return [p]
+    
+    elif type(p) == Str:
+        x = p.value
+        data["STRlock{}".format(MPN)] = ".asciz \"{}\"".format(x)
+    
+        asm("movl ${}, %ecx".format("STRlock{}".format(MPN)))
+        MPN += 1
+        return 'str'
 
 def line_wrap(str, width=25):
     strs = []
@@ -332,11 +454,15 @@ while True:
       lexout.write(str(tok) + "\n")
 
 def cmpf():
-    global currentVersion, Beta, Author, Name, Description
+    global currentVersion, Beta, Author, Name, Description, data
     _startInclude = True
     if "main" not in funcs.keys():
         _startInclude = False
     with open("main.s", "w") as file:
+        file.write("\n.section .data\n\n\n")
+        for i in data:
+            file.write('\n{}:'.format(i))
+            file.write("\n\t{}".format(data[i]))
         #COMMENTS
         file.write("# FILE GENERATED BY SEMBLELANG" + "\n")
         file.write("#                             " + "\n")
