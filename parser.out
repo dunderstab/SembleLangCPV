@@ -11,60 +11,93 @@ Rule 5     function -> DEF NAME LPAREN NAME RPAREN statement
 Rule 6     function -> DEF NAME LPAREN NAME RPAREN statementc
 Rule 7     function -> DEF NAME LPAREN args RPAREN statement
 Rule 8     function -> DEF NAME LPAREN args RPAREN statementc
-Rule 9     args -> args COMMA NAME
-Rule 10    args -> NAME COMMA NAME
-Rule 11    argse -> argse COMMA expression
-Rule 12    argse -> expression COMMA expression
-Rule 13    statement -> NAME LPAREN RPAREN SEMICOLON
-Rule 14    statement -> NAME LPAREN argse RPAREN SEMICOLON
-Rule 15    statement -> NAME LPAREN expression RPAREN SEMICOLON
-Rule 16    statements -> statement statements
-Rule 17    statements -> statement statement
-Rule 18    statementc -> LBRAC statement RBRAC
-Rule 19    statementc -> LBRAC statements RBRAC
-Rule 20    statementc -> LBRAC empty RBRAC
-Rule 21    statement -> NAME EQUALS expression SEMICOLON
-Rule 22    statement -> RETURN expression SEMICOLON
-Rule 23    expression -> INT
-Rule 24    expression -> NAME
-Rule 25    expression -> STRING
-Rule 26    expression -> expression MUL expression
-Rule 27    expression -> expression DIV expression
-Rule 28    expression -> expression PLUS expression
-Rule 29    expression -> expression MINUS expression
-Rule 30    empty -> <empty>
+Rule 9     statement -> IF LPAREN expression RPAREN statementc
+Rule 10    statement -> IF LPAREN expression RPAREN statement
+Rule 11    statement -> IF LPAREN expression RPAREN statementc ELSE statementc
+Rule 12    statement -> IF LPAREN expression RPAREN statement ELSE statement
+Rule 13    statement -> IF LPAREN expression RPAREN statementc ELSE statement
+Rule 14    statement -> IF LPAREN expression RPAREN statement ELSE statementc
+Rule 15    args -> args COMMA NAME
+Rule 16    args -> NAME COMMA NAME
+Rule 17    argse -> argse COMMA expression
+Rule 18    argse -> expression COMMA expression
+Rule 19    statement -> NAME LPAREN RPAREN SEMICOLON
+Rule 20    statement -> NAME LPAREN argse RPAREN SEMICOLON
+Rule 21    statement -> NAME LPAREN expression RPAREN SEMICOLON
+Rule 22    statements -> statement statements
+Rule 23    statements -> statement statement
+Rule 24    statementc -> LBRAC statement RBRAC
+Rule 25    statementc -> LBRAC statements RBRAC
+Rule 26    statementc -> LBRAC empty RBRAC
+Rule 27    statement -> NAME EQUALS expression SEMICOLON
+Rule 28    statement -> RETURN expression SEMICOLON
+Rule 29    expression -> INT
+Rule 30    expression -> NAME
+Rule 31    expression -> STRING
+Rule 32    expression -> NOT expression
+Rule 33    expression -> NAME LPAREN RPAREN
+Rule 34    expression -> NAME LPAREN argse RPAREN
+Rule 35    expression -> NAME LPAREN expression RPAREN
+Rule 36    expression -> expression MUL expression
+Rule 37    expression -> expression DIV expression
+Rule 38    expression -> expression PLUS expression
+Rule 39    expression -> expression MINUS expression
+Rule 40    expression -> expression AND expression
+Rule 41    expression -> expression AND2 expression
+Rule 42    expression -> expression OR2 expression
+Rule 43    expression -> expression OR expression
+Rule 44    expression -> expression DNE expression
+Rule 45    expression -> expression EQ expression
+Rule 46    expression -> expression GRT expression
+Rule 47    expression -> expression GRTE expression
+Rule 48    expression -> expression LT expression
+Rule 49    expression -> expression LTE expression
+Rule 50    empty -> <empty>
 
 Terminals, with rules where they appear
 
-COMMA                : 9 10 11 12
+AND                  : 40
+AND2                 : 41
+COMMA                : 15 16 17 18
 DEF                  : 3 4 5 6 7 8
-DIV                  : 27
-EQUALS               : 21
-INT                  : 23
-LBRAC                : 18 19 20
-LPAREN               : 3 4 5 6 7 8 13 14 15
-MINUS                : 29
-MUL                  : 26
-NAME                 : 3 4 5 5 6 6 7 8 9 10 10 13 14 15 21 24
-PLUS                 : 28
-RBRAC                : 18 19 20
-RETURN               : 22
-RPAREN               : 3 4 5 6 7 8 13 14 15
-SEMICOLON            : 13 14 15 21 22
-STRING               : 25
+DIV                  : 37
+DNE                  : 44
+ELSE                 : 11 12 13 14
+EQ                   : 45
+EQUALS               : 27
+GRT                  : 46
+GRTE                 : 47
+IF                   : 9 10 11 12 13 14
+INT                  : 29
+LBRAC                : 24 25 26
+LPAREN               : 3 4 5 6 7 8 9 10 11 12 13 14 19 20 21 33 34 35
+LT                   : 48
+LTE                  : 49
+MINUS                : 39
+MUL                  : 36
+NAME                 : 3 4 5 5 6 6 7 8 15 16 16 19 20 21 27 30 33 34 35
+NOT                  : 32
+OR                   : 43
+OR2                  : 42
+PLUS                 : 38
+RBRAC                : 24 25 26
+RETURN               : 28
+RPAREN               : 3 4 5 6 7 8 9 10 11 12 13 14 19 20 21 33 34 35
+SEMICOLON            : 19 20 21 27 28
+STRING               : 31
 error                : 
 
 Nonterminals, with rules where they appear
 
-args                 : 7 8 9
-argse                : 11 14
+args                 : 7 8 15
+argse                : 17 20 34
 code                 : 2 2 0
-empty                : 20
-expression           : 11 12 12 15 21 22 26 26 27 27 28 28 29 29
+empty                : 26
+expression           : 9 10 11 12 13 14 17 18 18 21 27 28 32 35 36 36 37 37 38 38 39 39 40 40 41 41 42 42 43 43 44 44 45 45 46 46 47 47 48 48 49 49
 function             : 1
-statement            : 3 5 7 16 17 17 18
-statementc           : 4 6 8
-statements           : 16 19
+statement            : 3 5 7 10 12 12 13 14 22 23 23 24
+statementc           : 4 6 8 9 11 11 13 14
+statements           : 22 25
 
 Parsing method: LALR
 
@@ -165,8 +198,8 @@ state 6
     (6) function -> DEF NAME LPAREN . NAME RPAREN statementc
     (7) function -> DEF NAME LPAREN . args RPAREN statement
     (8) function -> DEF NAME LPAREN . args RPAREN statementc
-    (9) args -> . args COMMA NAME
-    (10) args -> . NAME COMMA NAME
+    (15) args -> . args COMMA NAME
+    (16) args -> . NAME COMMA NAME
 
     RPAREN          shift and go to state 8
     NAME            shift and go to state 7
@@ -177,7 +210,7 @@ state 7
 
     (5) function -> DEF NAME LPAREN NAME . RPAREN statement
     (6) function -> DEF NAME LPAREN NAME . RPAREN statementc
-    (10) args -> NAME . COMMA NAME
+    (16) args -> NAME . COMMA NAME
 
     RPAREN          shift and go to state 10
     COMMA           shift and go to state 11
@@ -187,18 +220,25 @@ state 8
 
     (3) function -> DEF NAME LPAREN RPAREN . statement
     (4) function -> DEF NAME LPAREN RPAREN . statementc
-    (13) statement -> . NAME LPAREN RPAREN SEMICOLON
-    (14) statement -> . NAME LPAREN argse RPAREN SEMICOLON
-    (15) statement -> . NAME LPAREN expression RPAREN SEMICOLON
-    (21) statement -> . NAME EQUALS expression SEMICOLON
-    (22) statement -> . RETURN expression SEMICOLON
-    (18) statementc -> . LBRAC statement RBRAC
-    (19) statementc -> . LBRAC statements RBRAC
-    (20) statementc -> . LBRAC empty RBRAC
+    (9) statement -> . IF LPAREN expression RPAREN statementc
+    (10) statement -> . IF LPAREN expression RPAREN statement
+    (11) statement -> . IF LPAREN expression RPAREN statementc ELSE statementc
+    (12) statement -> . IF LPAREN expression RPAREN statement ELSE statement
+    (13) statement -> . IF LPAREN expression RPAREN statementc ELSE statement
+    (14) statement -> . IF LPAREN expression RPAREN statement ELSE statementc
+    (19) statement -> . NAME LPAREN RPAREN SEMICOLON
+    (20) statement -> . NAME LPAREN argse RPAREN SEMICOLON
+    (21) statement -> . NAME LPAREN expression RPAREN SEMICOLON
+    (27) statement -> . NAME EQUALS expression SEMICOLON
+    (28) statement -> . RETURN expression SEMICOLON
+    (24) statementc -> . LBRAC statement RBRAC
+    (25) statementc -> . LBRAC statements RBRAC
+    (26) statementc -> . LBRAC empty RBRAC
 
+    IF              shift and go to state 15
     NAME            shift and go to state 12
-    RETURN          shift and go to state 15
-    LBRAC           shift and go to state 16
+    RETURN          shift and go to state 16
+    LBRAC           shift and go to state 17
 
     statement                      shift and go to state 13
     statementc                     shift and go to state 14
@@ -207,48 +247,55 @@ state 9
 
     (7) function -> DEF NAME LPAREN args . RPAREN statement
     (8) function -> DEF NAME LPAREN args . RPAREN statementc
-    (9) args -> args . COMMA NAME
+    (15) args -> args . COMMA NAME
 
-    RPAREN          shift and go to state 17
-    COMMA           shift and go to state 18
+    RPAREN          shift and go to state 18
+    COMMA           shift and go to state 19
 
 
 state 10
 
     (5) function -> DEF NAME LPAREN NAME RPAREN . statement
     (6) function -> DEF NAME LPAREN NAME RPAREN . statementc
-    (13) statement -> . NAME LPAREN RPAREN SEMICOLON
-    (14) statement -> . NAME LPAREN argse RPAREN SEMICOLON
-    (15) statement -> . NAME LPAREN expression RPAREN SEMICOLON
-    (21) statement -> . NAME EQUALS expression SEMICOLON
-    (22) statement -> . RETURN expression SEMICOLON
-    (18) statementc -> . LBRAC statement RBRAC
-    (19) statementc -> . LBRAC statements RBRAC
-    (20) statementc -> . LBRAC empty RBRAC
+    (9) statement -> . IF LPAREN expression RPAREN statementc
+    (10) statement -> . IF LPAREN expression RPAREN statement
+    (11) statement -> . IF LPAREN expression RPAREN statementc ELSE statementc
+    (12) statement -> . IF LPAREN expression RPAREN statement ELSE statement
+    (13) statement -> . IF LPAREN expression RPAREN statementc ELSE statement
+    (14) statement -> . IF LPAREN expression RPAREN statement ELSE statementc
+    (19) statement -> . NAME LPAREN RPAREN SEMICOLON
+    (20) statement -> . NAME LPAREN argse RPAREN SEMICOLON
+    (21) statement -> . NAME LPAREN expression RPAREN SEMICOLON
+    (27) statement -> . NAME EQUALS expression SEMICOLON
+    (28) statement -> . RETURN expression SEMICOLON
+    (24) statementc -> . LBRAC statement RBRAC
+    (25) statementc -> . LBRAC statements RBRAC
+    (26) statementc -> . LBRAC empty RBRAC
 
+    IF              shift and go to state 15
     NAME            shift and go to state 12
-    RETURN          shift and go to state 15
-    LBRAC           shift and go to state 16
+    RETURN          shift and go to state 16
+    LBRAC           shift and go to state 17
 
-    statement                      shift and go to state 19
-    statementc                     shift and go to state 20
+    statement                      shift and go to state 20
+    statementc                     shift and go to state 21
 
 state 11
 
-    (10) args -> NAME COMMA . NAME
+    (16) args -> NAME COMMA . NAME
 
-    NAME            shift and go to state 21
+    NAME            shift and go to state 22
 
 
 state 12
 
-    (13) statement -> NAME . LPAREN RPAREN SEMICOLON
-    (14) statement -> NAME . LPAREN argse RPAREN SEMICOLON
-    (15) statement -> NAME . LPAREN expression RPAREN SEMICOLON
-    (21) statement -> NAME . EQUALS expression SEMICOLON
+    (19) statement -> NAME . LPAREN RPAREN SEMICOLON
+    (20) statement -> NAME . LPAREN argse RPAREN SEMICOLON
+    (21) statement -> NAME . LPAREN expression RPAREN SEMICOLON
+    (27) statement -> NAME . EQUALS expression SEMICOLON
 
-    LPAREN          shift and go to state 22
-    EQUALS          shift and go to state 23
+    LPAREN          shift and go to state 23
+    EQUALS          shift and go to state 24
 
 
 state 13
@@ -269,71 +316,112 @@ state 14
 
 state 15
 
-    (22) statement -> RETURN . expression SEMICOLON
-    (23) expression -> . INT
-    (24) expression -> . NAME
-    (25) expression -> . STRING
-    (26) expression -> . expression MUL expression
-    (27) expression -> . expression DIV expression
-    (28) expression -> . expression PLUS expression
-    (29) expression -> . expression MINUS expression
+    (9) statement -> IF . LPAREN expression RPAREN statementc
+    (10) statement -> IF . LPAREN expression RPAREN statement
+    (11) statement -> IF . LPAREN expression RPAREN statementc ELSE statementc
+    (12) statement -> IF . LPAREN expression RPAREN statement ELSE statement
+    (13) statement -> IF . LPAREN expression RPAREN statementc ELSE statement
+    (14) statement -> IF . LPAREN expression RPAREN statement ELSE statementc
 
-    INT             shift and go to state 25
-    NAME            shift and go to state 26
-    STRING          shift and go to state 27
+    LPAREN          shift and go to state 25
 
-    expression                     shift and go to state 24
 
 state 16
 
-    (18) statementc -> LBRAC . statement RBRAC
-    (19) statementc -> LBRAC . statements RBRAC
-    (20) statementc -> LBRAC . empty RBRAC
-    (13) statement -> . NAME LPAREN RPAREN SEMICOLON
-    (14) statement -> . NAME LPAREN argse RPAREN SEMICOLON
-    (15) statement -> . NAME LPAREN expression RPAREN SEMICOLON
-    (21) statement -> . NAME EQUALS expression SEMICOLON
-    (22) statement -> . RETURN expression SEMICOLON
-    (16) statements -> . statement statements
-    (17) statements -> . statement statement
-    (30) empty -> .
+    (28) statement -> RETURN . expression SEMICOLON
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    NAME            shift and go to state 12
-    RETURN          shift and go to state 15
-    RBRAC           reduce using rule 30 (empty -> .)
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
-    statement                      shift and go to state 28
-    statements                     shift and go to state 29
-    empty                          shift and go to state 30
+    expression                     shift and go to state 26
 
 state 17
 
-    (7) function -> DEF NAME LPAREN args RPAREN . statement
-    (8) function -> DEF NAME LPAREN args RPAREN . statementc
-    (13) statement -> . NAME LPAREN RPAREN SEMICOLON
-    (14) statement -> . NAME LPAREN argse RPAREN SEMICOLON
-    (15) statement -> . NAME LPAREN expression RPAREN SEMICOLON
-    (21) statement -> . NAME EQUALS expression SEMICOLON
-    (22) statement -> . RETURN expression SEMICOLON
-    (18) statementc -> . LBRAC statement RBRAC
-    (19) statementc -> . LBRAC statements RBRAC
-    (20) statementc -> . LBRAC empty RBRAC
+    (24) statementc -> LBRAC . statement RBRAC
+    (25) statementc -> LBRAC . statements RBRAC
+    (26) statementc -> LBRAC . empty RBRAC
+    (9) statement -> . IF LPAREN expression RPAREN statementc
+    (10) statement -> . IF LPAREN expression RPAREN statement
+    (11) statement -> . IF LPAREN expression RPAREN statementc ELSE statementc
+    (12) statement -> . IF LPAREN expression RPAREN statement ELSE statement
+    (13) statement -> . IF LPAREN expression RPAREN statementc ELSE statement
+    (14) statement -> . IF LPAREN expression RPAREN statement ELSE statementc
+    (19) statement -> . NAME LPAREN RPAREN SEMICOLON
+    (20) statement -> . NAME LPAREN argse RPAREN SEMICOLON
+    (21) statement -> . NAME LPAREN expression RPAREN SEMICOLON
+    (27) statement -> . NAME EQUALS expression SEMICOLON
+    (28) statement -> . RETURN expression SEMICOLON
+    (22) statements -> . statement statements
+    (23) statements -> . statement statement
+    (50) empty -> .
 
+    IF              shift and go to state 15
     NAME            shift and go to state 12
-    RETURN          shift and go to state 15
-    LBRAC           shift and go to state 16
+    RETURN          shift and go to state 16
+    RBRAC           reduce using rule 50 (empty -> .)
 
     statement                      shift and go to state 31
-    statementc                     shift and go to state 32
+    statements                     shift and go to state 32
+    empty                          shift and go to state 33
 
 state 18
 
-    (9) args -> args COMMA . NAME
+    (7) function -> DEF NAME LPAREN args RPAREN . statement
+    (8) function -> DEF NAME LPAREN args RPAREN . statementc
+    (9) statement -> . IF LPAREN expression RPAREN statementc
+    (10) statement -> . IF LPAREN expression RPAREN statement
+    (11) statement -> . IF LPAREN expression RPAREN statementc ELSE statementc
+    (12) statement -> . IF LPAREN expression RPAREN statement ELSE statement
+    (13) statement -> . IF LPAREN expression RPAREN statementc ELSE statement
+    (14) statement -> . IF LPAREN expression RPAREN statement ELSE statementc
+    (19) statement -> . NAME LPAREN RPAREN SEMICOLON
+    (20) statement -> . NAME LPAREN argse RPAREN SEMICOLON
+    (21) statement -> . NAME LPAREN expression RPAREN SEMICOLON
+    (27) statement -> . NAME EQUALS expression SEMICOLON
+    (28) statement -> . RETURN expression SEMICOLON
+    (24) statementc -> . LBRAC statement RBRAC
+    (25) statementc -> . LBRAC statements RBRAC
+    (26) statementc -> . LBRAC empty RBRAC
 
-    NAME            shift and go to state 33
+    IF              shift and go to state 15
+    NAME            shift and go to state 12
+    RETURN          shift and go to state 16
+    LBRAC           shift and go to state 17
 
+    statement                      shift and go to state 34
+    statementc                     shift and go to state 35
 
 state 19
+
+    (15) args -> args COMMA . NAME
+
+    NAME            shift and go to state 36
+
+
+state 20
 
     (5) function -> DEF NAME LPAREN NAME RPAREN statement .
 
@@ -341,7 +429,7 @@ state 19
     $end            reduce using rule 5 (function -> DEF NAME LPAREN NAME RPAREN statement .)
 
 
-state 20
+state 21
 
     (6) function -> DEF NAME LPAREN NAME RPAREN statementc .
 
@@ -349,143 +437,303 @@ state 20
     $end            reduce using rule 6 (function -> DEF NAME LPAREN NAME RPAREN statementc .)
 
 
-state 21
-
-    (10) args -> NAME COMMA NAME .
-
-    RPAREN          reduce using rule 10 (args -> NAME COMMA NAME .)
-    COMMA           reduce using rule 10 (args -> NAME COMMA NAME .)
-
-
 state 22
 
-    (13) statement -> NAME LPAREN . RPAREN SEMICOLON
-    (14) statement -> NAME LPAREN . argse RPAREN SEMICOLON
-    (15) statement -> NAME LPAREN . expression RPAREN SEMICOLON
-    (11) argse -> . argse COMMA expression
-    (12) argse -> . expression COMMA expression
-    (23) expression -> . INT
-    (24) expression -> . NAME
-    (25) expression -> . STRING
-    (26) expression -> . expression MUL expression
-    (27) expression -> . expression DIV expression
-    (28) expression -> . expression PLUS expression
-    (29) expression -> . expression MINUS expression
+    (16) args -> NAME COMMA NAME .
 
-    RPAREN          shift and go to state 34
-    INT             shift and go to state 25
-    NAME            shift and go to state 26
-    STRING          shift and go to state 27
+    RPAREN          reduce using rule 16 (args -> NAME COMMA NAME .)
+    COMMA           reduce using rule 16 (args -> NAME COMMA NAME .)
 
-    argse                          shift and go to state 35
-    expression                     shift and go to state 36
 
 state 23
 
-    (21) statement -> NAME EQUALS . expression SEMICOLON
-    (23) expression -> . INT
-    (24) expression -> . NAME
-    (25) expression -> . STRING
-    (26) expression -> . expression MUL expression
-    (27) expression -> . expression DIV expression
-    (28) expression -> . expression PLUS expression
-    (29) expression -> . expression MINUS expression
+    (19) statement -> NAME LPAREN . RPAREN SEMICOLON
+    (20) statement -> NAME LPAREN . argse RPAREN SEMICOLON
+    (21) statement -> NAME LPAREN . expression RPAREN SEMICOLON
+    (17) argse -> . argse COMMA expression
+    (18) argse -> . expression COMMA expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    INT             shift and go to state 25
-    NAME            shift and go to state 26
-    STRING          shift and go to state 27
+    RPAREN          shift and go to state 37
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
-    expression                     shift and go to state 37
+    argse                          shift and go to state 38
+    expression                     shift and go to state 39
 
 state 24
 
-    (22) statement -> RETURN expression . SEMICOLON
-    (26) expression -> expression . MUL expression
-    (27) expression -> expression . DIV expression
-    (28) expression -> expression . PLUS expression
-    (29) expression -> expression . MINUS expression
+    (27) statement -> NAME EQUALS . expression SEMICOLON
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    SEMICOLON       shift and go to state 38
-    MUL             shift and go to state 39
-    DIV             shift and go to state 40
-    PLUS            shift and go to state 41
-    MINUS           shift and go to state 42
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
+    expression                     shift and go to state 40
 
 state 25
 
-    (23) expression -> INT .
+    (9) statement -> IF LPAREN . expression RPAREN statementc
+    (10) statement -> IF LPAREN . expression RPAREN statement
+    (11) statement -> IF LPAREN . expression RPAREN statementc ELSE statementc
+    (12) statement -> IF LPAREN . expression RPAREN statement ELSE statement
+    (13) statement -> IF LPAREN . expression RPAREN statementc ELSE statement
+    (14) statement -> IF LPAREN . expression RPAREN statement ELSE statementc
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    SEMICOLON       reduce using rule 23 (expression -> INT .)
-    MUL             reduce using rule 23 (expression -> INT .)
-    DIV             reduce using rule 23 (expression -> INT .)
-    PLUS            reduce using rule 23 (expression -> INT .)
-    MINUS           reduce using rule 23 (expression -> INT .)
-    RPAREN          reduce using rule 23 (expression -> INT .)
-    COMMA           reduce using rule 23 (expression -> INT .)
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
+    expression                     shift and go to state 41
 
 state 26
 
-    (24) expression -> NAME .
+    (28) statement -> RETURN expression . SEMICOLON
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
 
-    SEMICOLON       reduce using rule 24 (expression -> NAME .)
-    MUL             reduce using rule 24 (expression -> NAME .)
-    DIV             reduce using rule 24 (expression -> NAME .)
-    PLUS            reduce using rule 24 (expression -> NAME .)
-    MINUS           reduce using rule 24 (expression -> NAME .)
-    RPAREN          reduce using rule 24 (expression -> NAME .)
-    COMMA           reduce using rule 24 (expression -> NAME .)
+    SEMICOLON       shift and go to state 42
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
 
 
 state 27
 
-    (25) expression -> STRING .
+    (29) expression -> INT .
 
-    SEMICOLON       reduce using rule 25 (expression -> STRING .)
-    MUL             reduce using rule 25 (expression -> STRING .)
-    DIV             reduce using rule 25 (expression -> STRING .)
-    PLUS            reduce using rule 25 (expression -> STRING .)
-    MINUS           reduce using rule 25 (expression -> STRING .)
-    RPAREN          reduce using rule 25 (expression -> STRING .)
-    COMMA           reduce using rule 25 (expression -> STRING .)
+    SEMICOLON       reduce using rule 29 (expression -> INT .)
+    MUL             reduce using rule 29 (expression -> INT .)
+    DIV             reduce using rule 29 (expression -> INT .)
+    PLUS            reduce using rule 29 (expression -> INT .)
+    MINUS           reduce using rule 29 (expression -> INT .)
+    AND             reduce using rule 29 (expression -> INT .)
+    AND2            reduce using rule 29 (expression -> INT .)
+    OR2             reduce using rule 29 (expression -> INT .)
+    OR              reduce using rule 29 (expression -> INT .)
+    DNE             reduce using rule 29 (expression -> INT .)
+    EQ              reduce using rule 29 (expression -> INT .)
+    GRT             reduce using rule 29 (expression -> INT .)
+    GRTE            reduce using rule 29 (expression -> INT .)
+    LT              reduce using rule 29 (expression -> INT .)
+    LTE             reduce using rule 29 (expression -> INT .)
+    RPAREN          reduce using rule 29 (expression -> INT .)
+    COMMA           reduce using rule 29 (expression -> INT .)
 
 
 state 28
 
-    (18) statementc -> LBRAC statement . RBRAC
-    (16) statements -> statement . statements
-    (17) statements -> statement . statement
-    (16) statements -> . statement statements
-    (17) statements -> . statement statement
-    (13) statement -> . NAME LPAREN RPAREN SEMICOLON
-    (14) statement -> . NAME LPAREN argse RPAREN SEMICOLON
-    (15) statement -> . NAME LPAREN expression RPAREN SEMICOLON
-    (21) statement -> . NAME EQUALS expression SEMICOLON
-    (22) statement -> . RETURN expression SEMICOLON
+    (30) expression -> NAME .
+    (33) expression -> NAME . LPAREN RPAREN
+    (34) expression -> NAME . LPAREN argse RPAREN
+    (35) expression -> NAME . LPAREN expression RPAREN
 
-    RBRAC           shift and go to state 44
-    NAME            shift and go to state 12
-    RETURN          shift and go to state 15
+    SEMICOLON       reduce using rule 30 (expression -> NAME .)
+    MUL             reduce using rule 30 (expression -> NAME .)
+    DIV             reduce using rule 30 (expression -> NAME .)
+    PLUS            reduce using rule 30 (expression -> NAME .)
+    MINUS           reduce using rule 30 (expression -> NAME .)
+    AND             reduce using rule 30 (expression -> NAME .)
+    AND2            reduce using rule 30 (expression -> NAME .)
+    OR2             reduce using rule 30 (expression -> NAME .)
+    OR              reduce using rule 30 (expression -> NAME .)
+    DNE             reduce using rule 30 (expression -> NAME .)
+    EQ              reduce using rule 30 (expression -> NAME .)
+    GRT             reduce using rule 30 (expression -> NAME .)
+    GRTE            reduce using rule 30 (expression -> NAME .)
+    LT              reduce using rule 30 (expression -> NAME .)
+    LTE             reduce using rule 30 (expression -> NAME .)
+    RPAREN          reduce using rule 30 (expression -> NAME .)
+    COMMA           reduce using rule 30 (expression -> NAME .)
+    LPAREN          shift and go to state 57
 
-    statement                      shift and go to state 43
-    statements                     shift and go to state 45
 
 state 29
 
-    (19) statementc -> LBRAC statements . RBRAC
+    (31) expression -> STRING .
 
-    RBRAC           shift and go to state 46
+    SEMICOLON       reduce using rule 31 (expression -> STRING .)
+    MUL             reduce using rule 31 (expression -> STRING .)
+    DIV             reduce using rule 31 (expression -> STRING .)
+    PLUS            reduce using rule 31 (expression -> STRING .)
+    MINUS           reduce using rule 31 (expression -> STRING .)
+    AND             reduce using rule 31 (expression -> STRING .)
+    AND2            reduce using rule 31 (expression -> STRING .)
+    OR2             reduce using rule 31 (expression -> STRING .)
+    OR              reduce using rule 31 (expression -> STRING .)
+    DNE             reduce using rule 31 (expression -> STRING .)
+    EQ              reduce using rule 31 (expression -> STRING .)
+    GRT             reduce using rule 31 (expression -> STRING .)
+    GRTE            reduce using rule 31 (expression -> STRING .)
+    LT              reduce using rule 31 (expression -> STRING .)
+    LTE             reduce using rule 31 (expression -> STRING .)
+    RPAREN          reduce using rule 31 (expression -> STRING .)
+    COMMA           reduce using rule 31 (expression -> STRING .)
 
 
 state 30
 
-    (20) statementc -> LBRAC empty . RBRAC
+    (32) expression -> NOT . expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    RBRAC           shift and go to state 47
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
+    expression                     shift and go to state 58
 
 state 31
+
+    (24) statementc -> LBRAC statement . RBRAC
+    (22) statements -> statement . statements
+    (23) statements -> statement . statement
+    (22) statements -> . statement statements
+    (23) statements -> . statement statement
+    (9) statement -> . IF LPAREN expression RPAREN statementc
+    (10) statement -> . IF LPAREN expression RPAREN statement
+    (11) statement -> . IF LPAREN expression RPAREN statementc ELSE statementc
+    (12) statement -> . IF LPAREN expression RPAREN statement ELSE statement
+    (13) statement -> . IF LPAREN expression RPAREN statementc ELSE statement
+    (14) statement -> . IF LPAREN expression RPAREN statement ELSE statementc
+    (19) statement -> . NAME LPAREN RPAREN SEMICOLON
+    (20) statement -> . NAME LPAREN argse RPAREN SEMICOLON
+    (21) statement -> . NAME LPAREN expression RPAREN SEMICOLON
+    (27) statement -> . NAME EQUALS expression SEMICOLON
+    (28) statement -> . RETURN expression SEMICOLON
+
+    RBRAC           shift and go to state 60
+    IF              shift and go to state 15
+    NAME            shift and go to state 12
+    RETURN          shift and go to state 16
+
+    statement                      shift and go to state 59
+    statements                     shift and go to state 61
+
+state 32
+
+    (25) statementc -> LBRAC statements . RBRAC
+
+    RBRAC           shift and go to state 62
+
+
+state 33
+
+    (26) statementc -> LBRAC empty . RBRAC
+
+    RBRAC           shift and go to state 63
+
+
+state 34
 
     (7) function -> DEF NAME LPAREN args RPAREN statement .
 
@@ -493,7 +741,7 @@ state 31
     $end            reduce using rule 7 (function -> DEF NAME LPAREN args RPAREN statement .)
 
 
-state 32
+state 35
 
     (8) function -> DEF NAME LPAREN args RPAREN statementc .
 
@@ -501,404 +749,2294 @@ state 32
     $end            reduce using rule 8 (function -> DEF NAME LPAREN args RPAREN statementc .)
 
 
-state 33
-
-    (9) args -> args COMMA NAME .
-
-    RPAREN          reduce using rule 9 (args -> args COMMA NAME .)
-    COMMA           reduce using rule 9 (args -> args COMMA NAME .)
-
-
-state 34
-
-    (13) statement -> NAME LPAREN RPAREN . SEMICOLON
-
-    SEMICOLON       shift and go to state 48
-
-
-state 35
-
-    (14) statement -> NAME LPAREN argse . RPAREN SEMICOLON
-    (11) argse -> argse . COMMA expression
-
-    RPAREN          shift and go to state 49
-    COMMA           shift and go to state 50
-
-
 state 36
 
-    (15) statement -> NAME LPAREN expression . RPAREN SEMICOLON
-    (12) argse -> expression . COMMA expression
-    (26) expression -> expression . MUL expression
-    (27) expression -> expression . DIV expression
-    (28) expression -> expression . PLUS expression
-    (29) expression -> expression . MINUS expression
+    (15) args -> args COMMA NAME .
 
-    RPAREN          shift and go to state 51
-    COMMA           shift and go to state 52
-    MUL             shift and go to state 39
-    DIV             shift and go to state 40
-    PLUS            shift and go to state 41
-    MINUS           shift and go to state 42
+    RPAREN          reduce using rule 15 (args -> args COMMA NAME .)
+    COMMA           reduce using rule 15 (args -> args COMMA NAME .)
 
 
 state 37
 
-    (21) statement -> NAME EQUALS expression . SEMICOLON
-    (26) expression -> expression . MUL expression
-    (27) expression -> expression . DIV expression
-    (28) expression -> expression . PLUS expression
-    (29) expression -> expression . MINUS expression
+    (19) statement -> NAME LPAREN RPAREN . SEMICOLON
 
-    SEMICOLON       shift and go to state 53
-    MUL             shift and go to state 39
-    DIV             shift and go to state 40
-    PLUS            shift and go to state 41
-    MINUS           shift and go to state 42
+    SEMICOLON       shift and go to state 64
 
 
 state 38
 
-    (22) statement -> RETURN expression SEMICOLON .
+    (20) statement -> NAME LPAREN argse . RPAREN SEMICOLON
+    (17) argse -> argse . COMMA expression
 
-    DEF             reduce using rule 22 (statement -> RETURN expression SEMICOLON .)
-    $end            reduce using rule 22 (statement -> RETURN expression SEMICOLON .)
-    RBRAC           reduce using rule 22 (statement -> RETURN expression SEMICOLON .)
-    NAME            reduce using rule 22 (statement -> RETURN expression SEMICOLON .)
-    RETURN          reduce using rule 22 (statement -> RETURN expression SEMICOLON .)
+    RPAREN          shift and go to state 65
+    COMMA           shift and go to state 66
 
 
 state 39
 
-    (26) expression -> expression MUL . expression
-    (23) expression -> . INT
-    (24) expression -> . NAME
-    (25) expression -> . STRING
-    (26) expression -> . expression MUL expression
-    (27) expression -> . expression DIV expression
-    (28) expression -> . expression PLUS expression
-    (29) expression -> . expression MINUS expression
+    (21) statement -> NAME LPAREN expression . RPAREN SEMICOLON
+    (18) argse -> expression . COMMA expression
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
 
-    INT             shift and go to state 25
-    NAME            shift and go to state 26
-    STRING          shift and go to state 27
+    RPAREN          shift and go to state 67
+    COMMA           shift and go to state 68
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
 
-    expression                     shift and go to state 54
 
 state 40
 
-    (27) expression -> expression DIV . expression
-    (23) expression -> . INT
-    (24) expression -> . NAME
-    (25) expression -> . STRING
-    (26) expression -> . expression MUL expression
-    (27) expression -> . expression DIV expression
-    (28) expression -> . expression PLUS expression
-    (29) expression -> . expression MINUS expression
+    (27) statement -> NAME EQUALS expression . SEMICOLON
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
 
-    INT             shift and go to state 25
-    NAME            shift and go to state 26
-    STRING          shift and go to state 27
+    SEMICOLON       shift and go to state 69
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
 
-    expression                     shift and go to state 55
 
 state 41
 
-    (28) expression -> expression PLUS . expression
-    (23) expression -> . INT
-    (24) expression -> . NAME
-    (25) expression -> . STRING
-    (26) expression -> . expression MUL expression
-    (27) expression -> . expression DIV expression
-    (28) expression -> . expression PLUS expression
-    (29) expression -> . expression MINUS expression
+    (9) statement -> IF LPAREN expression . RPAREN statementc
+    (10) statement -> IF LPAREN expression . RPAREN statement
+    (11) statement -> IF LPAREN expression . RPAREN statementc ELSE statementc
+    (12) statement -> IF LPAREN expression . RPAREN statement ELSE statement
+    (13) statement -> IF LPAREN expression . RPAREN statementc ELSE statement
+    (14) statement -> IF LPAREN expression . RPAREN statement ELSE statementc
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
 
-    INT             shift and go to state 25
-    NAME            shift and go to state 26
-    STRING          shift and go to state 27
+    RPAREN          shift and go to state 70
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
 
-    expression                     shift and go to state 56
 
 state 42
 
-    (29) expression -> expression MINUS . expression
-    (23) expression -> . INT
-    (24) expression -> . NAME
-    (25) expression -> . STRING
-    (26) expression -> . expression MUL expression
-    (27) expression -> . expression DIV expression
-    (28) expression -> . expression PLUS expression
-    (29) expression -> . expression MINUS expression
+    (28) statement -> RETURN expression SEMICOLON .
 
-    INT             shift and go to state 25
-    NAME            shift and go to state 26
-    STRING          shift and go to state 27
+    DEF             reduce using rule 28 (statement -> RETURN expression SEMICOLON .)
+    $end            reduce using rule 28 (statement -> RETURN expression SEMICOLON .)
+    RBRAC           reduce using rule 28 (statement -> RETURN expression SEMICOLON .)
+    IF              reduce using rule 28 (statement -> RETURN expression SEMICOLON .)
+    NAME            reduce using rule 28 (statement -> RETURN expression SEMICOLON .)
+    RETURN          reduce using rule 28 (statement -> RETURN expression SEMICOLON .)
+    ELSE            reduce using rule 28 (statement -> RETURN expression SEMICOLON .)
 
-    expression                     shift and go to state 57
 
 state 43
 
-    (17) statements -> statement statement .
-    (16) statements -> statement . statements
-    (17) statements -> statement . statement
-    (16) statements -> . statement statements
-    (17) statements -> . statement statement
-    (13) statement -> . NAME LPAREN RPAREN SEMICOLON
-    (14) statement -> . NAME LPAREN argse RPAREN SEMICOLON
-    (15) statement -> . NAME LPAREN expression RPAREN SEMICOLON
-    (21) statement -> . NAME EQUALS expression SEMICOLON
-    (22) statement -> . RETURN expression SEMICOLON
+    (36) expression -> expression MUL . expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    RBRAC           reduce using rule 17 (statements -> statement statement .)
-    NAME            shift and go to state 12
-    RETURN          shift and go to state 15
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
-    statement                      shift and go to state 43
-    statements                     shift and go to state 45
+    expression                     shift and go to state 71
 
 state 44
 
-    (18) statementc -> LBRAC statement RBRAC .
+    (37) expression -> expression DIV . expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    DEF             reduce using rule 18 (statementc -> LBRAC statement RBRAC .)
-    $end            reduce using rule 18 (statementc -> LBRAC statement RBRAC .)
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
+    expression                     shift and go to state 72
 
 state 45
 
-    (16) statements -> statement statements .
+    (38) expression -> expression PLUS . expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    RBRAC           reduce using rule 16 (statements -> statement statements .)
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
+    expression                     shift and go to state 73
 
 state 46
 
-    (19) statementc -> LBRAC statements RBRAC .
+    (39) expression -> expression MINUS . expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    DEF             reduce using rule 19 (statementc -> LBRAC statements RBRAC .)
-    $end            reduce using rule 19 (statementc -> LBRAC statements RBRAC .)
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
+    expression                     shift and go to state 74
 
 state 47
 
-    (20) statementc -> LBRAC empty RBRAC .
+    (40) expression -> expression AND . expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    DEF             reduce using rule 20 (statementc -> LBRAC empty RBRAC .)
-    $end            reduce using rule 20 (statementc -> LBRAC empty RBRAC .)
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
+    expression                     shift and go to state 75
 
 state 48
 
-    (13) statement -> NAME LPAREN RPAREN SEMICOLON .
+    (41) expression -> expression AND2 . expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    DEF             reduce using rule 13 (statement -> NAME LPAREN RPAREN SEMICOLON .)
-    $end            reduce using rule 13 (statement -> NAME LPAREN RPAREN SEMICOLON .)
-    RBRAC           reduce using rule 13 (statement -> NAME LPAREN RPAREN SEMICOLON .)
-    NAME            reduce using rule 13 (statement -> NAME LPAREN RPAREN SEMICOLON .)
-    RETURN          reduce using rule 13 (statement -> NAME LPAREN RPAREN SEMICOLON .)
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
+    expression                     shift and go to state 76
 
 state 49
 
-    (14) statement -> NAME LPAREN argse RPAREN . SEMICOLON
+    (42) expression -> expression OR2 . expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    SEMICOLON       shift and go to state 58
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
+    expression                     shift and go to state 77
 
 state 50
 
-    (11) argse -> argse COMMA . expression
-    (23) expression -> . INT
-    (24) expression -> . NAME
-    (25) expression -> . STRING
-    (26) expression -> . expression MUL expression
-    (27) expression -> . expression DIV expression
-    (28) expression -> . expression PLUS expression
-    (29) expression -> . expression MINUS expression
+    (43) expression -> expression OR . expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    INT             shift and go to state 25
-    NAME            shift and go to state 26
-    STRING          shift and go to state 27
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
-    expression                     shift and go to state 59
+    expression                     shift and go to state 78
 
 state 51
 
-    (15) statement -> NAME LPAREN expression RPAREN . SEMICOLON
+    (44) expression -> expression DNE . expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    SEMICOLON       shift and go to state 60
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
+    expression                     shift and go to state 79
 
 state 52
 
-    (12) argse -> expression COMMA . expression
-    (23) expression -> . INT
-    (24) expression -> . NAME
-    (25) expression -> . STRING
-    (26) expression -> . expression MUL expression
-    (27) expression -> . expression DIV expression
-    (28) expression -> . expression PLUS expression
-    (29) expression -> . expression MINUS expression
+    (45) expression -> expression EQ . expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    INT             shift and go to state 25
-    NAME            shift and go to state 26
-    STRING          shift and go to state 27
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
-    expression                     shift and go to state 61
+    expression                     shift and go to state 80
 
 state 53
 
-    (21) statement -> NAME EQUALS expression SEMICOLON .
+    (46) expression -> expression GRT . expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    DEF             reduce using rule 21 (statement -> NAME EQUALS expression SEMICOLON .)
-    $end            reduce using rule 21 (statement -> NAME EQUALS expression SEMICOLON .)
-    RBRAC           reduce using rule 21 (statement -> NAME EQUALS expression SEMICOLON .)
-    NAME            reduce using rule 21 (statement -> NAME EQUALS expression SEMICOLON .)
-    RETURN          reduce using rule 21 (statement -> NAME EQUALS expression SEMICOLON .)
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
+    expression                     shift and go to state 81
 
 state 54
 
-    (26) expression -> expression MUL expression .
-    (26) expression -> expression . MUL expression
-    (27) expression -> expression . DIV expression
-    (28) expression -> expression . PLUS expression
-    (29) expression -> expression . MINUS expression
+    (47) expression -> expression GRTE . expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    SEMICOLON       reduce using rule 26 (expression -> expression MUL expression .)
-    MUL             reduce using rule 26 (expression -> expression MUL expression .)
-    DIV             reduce using rule 26 (expression -> expression MUL expression .)
-    PLUS            reduce using rule 26 (expression -> expression MUL expression .)
-    MINUS           reduce using rule 26 (expression -> expression MUL expression .)
-    RPAREN          reduce using rule 26 (expression -> expression MUL expression .)
-    COMMA           reduce using rule 26 (expression -> expression MUL expression .)
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
-  ! MUL             [ shift and go to state 39 ]
-  ! DIV             [ shift and go to state 40 ]
-  ! PLUS            [ shift and go to state 41 ]
-  ! MINUS           [ shift and go to state 42 ]
-
+    expression                     shift and go to state 82
 
 state 55
 
-    (27) expression -> expression DIV expression .
-    (26) expression -> expression . MUL expression
-    (27) expression -> expression . DIV expression
-    (28) expression -> expression . PLUS expression
-    (29) expression -> expression . MINUS expression
+    (48) expression -> expression LT . expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    SEMICOLON       reduce using rule 27 (expression -> expression DIV expression .)
-    MUL             reduce using rule 27 (expression -> expression DIV expression .)
-    DIV             reduce using rule 27 (expression -> expression DIV expression .)
-    PLUS            reduce using rule 27 (expression -> expression DIV expression .)
-    MINUS           reduce using rule 27 (expression -> expression DIV expression .)
-    RPAREN          reduce using rule 27 (expression -> expression DIV expression .)
-    COMMA           reduce using rule 27 (expression -> expression DIV expression .)
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
-  ! MUL             [ shift and go to state 39 ]
-  ! DIV             [ shift and go to state 40 ]
-  ! PLUS            [ shift and go to state 41 ]
-  ! MINUS           [ shift and go to state 42 ]
-
+    expression                     shift and go to state 83
 
 state 56
 
-    (28) expression -> expression PLUS expression .
-    (26) expression -> expression . MUL expression
-    (27) expression -> expression . DIV expression
-    (28) expression -> expression . PLUS expression
-    (29) expression -> expression . MINUS expression
+    (49) expression -> expression LTE . expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    SEMICOLON       reduce using rule 28 (expression -> expression PLUS expression .)
-    PLUS            reduce using rule 28 (expression -> expression PLUS expression .)
-    MINUS           reduce using rule 28 (expression -> expression PLUS expression .)
-    RPAREN          reduce using rule 28 (expression -> expression PLUS expression .)
-    COMMA           reduce using rule 28 (expression -> expression PLUS expression .)
-    MUL             shift and go to state 39
-    DIV             shift and go to state 40
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
-  ! MUL             [ reduce using rule 28 (expression -> expression PLUS expression .) ]
-  ! DIV             [ reduce using rule 28 (expression -> expression PLUS expression .) ]
-  ! PLUS            [ shift and go to state 41 ]
-  ! MINUS           [ shift and go to state 42 ]
-
+    expression                     shift and go to state 84
 
 state 57
 
-    (29) expression -> expression MINUS expression .
-    (26) expression -> expression . MUL expression
-    (27) expression -> expression . DIV expression
-    (28) expression -> expression . PLUS expression
-    (29) expression -> expression . MINUS expression
+    (33) expression -> NAME LPAREN . RPAREN
+    (34) expression -> NAME LPAREN . argse RPAREN
+    (35) expression -> NAME LPAREN . expression RPAREN
+    (17) argse -> . argse COMMA expression
+    (18) argse -> . expression COMMA expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
 
-    SEMICOLON       reduce using rule 29 (expression -> expression MINUS expression .)
-    PLUS            reduce using rule 29 (expression -> expression MINUS expression .)
-    MINUS           reduce using rule 29 (expression -> expression MINUS expression .)
-    RPAREN          reduce using rule 29 (expression -> expression MINUS expression .)
-    COMMA           reduce using rule 29 (expression -> expression MINUS expression .)
-    MUL             shift and go to state 39
-    DIV             shift and go to state 40
+    RPAREN          shift and go to state 85
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
 
-  ! MUL             [ reduce using rule 29 (expression -> expression MINUS expression .) ]
-  ! DIV             [ reduce using rule 29 (expression -> expression MINUS expression .) ]
-  ! PLUS            [ shift and go to state 41 ]
-  ! MINUS           [ shift and go to state 42 ]
-
+    argse                          shift and go to state 86
+    expression                     shift and go to state 87
 
 state 58
 
-    (14) statement -> NAME LPAREN argse RPAREN SEMICOLON .
+    (32) expression -> NOT expression .
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
 
-    DEF             reduce using rule 14 (statement -> NAME LPAREN argse RPAREN SEMICOLON .)
-    $end            reduce using rule 14 (statement -> NAME LPAREN argse RPAREN SEMICOLON .)
-    RBRAC           reduce using rule 14 (statement -> NAME LPAREN argse RPAREN SEMICOLON .)
-    NAME            reduce using rule 14 (statement -> NAME LPAREN argse RPAREN SEMICOLON .)
-    RETURN          reduce using rule 14 (statement -> NAME LPAREN argse RPAREN SEMICOLON .)
+  ! shift/reduce conflict for MUL resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for AND2 resolved as shift
+  ! shift/reduce conflict for OR2 resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for DNE resolved as shift
+  ! shift/reduce conflict for EQ resolved as shift
+  ! shift/reduce conflict for GRT resolved as shift
+  ! shift/reduce conflict for GRTE resolved as shift
+  ! shift/reduce conflict for LT resolved as shift
+  ! shift/reduce conflict for LTE resolved as shift
+    SEMICOLON       reduce using rule 32 (expression -> NOT expression .)
+    RPAREN          reduce using rule 32 (expression -> NOT expression .)
+    COMMA           reduce using rule 32 (expression -> NOT expression .)
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
+
+  ! MUL             [ reduce using rule 32 (expression -> NOT expression .) ]
+  ! DIV             [ reduce using rule 32 (expression -> NOT expression .) ]
+  ! PLUS            [ reduce using rule 32 (expression -> NOT expression .) ]
+  ! MINUS           [ reduce using rule 32 (expression -> NOT expression .) ]
+  ! AND             [ reduce using rule 32 (expression -> NOT expression .) ]
+  ! AND2            [ reduce using rule 32 (expression -> NOT expression .) ]
+  ! OR2             [ reduce using rule 32 (expression -> NOT expression .) ]
+  ! OR              [ reduce using rule 32 (expression -> NOT expression .) ]
+  ! DNE             [ reduce using rule 32 (expression -> NOT expression .) ]
+  ! EQ              [ reduce using rule 32 (expression -> NOT expression .) ]
+  ! GRT             [ reduce using rule 32 (expression -> NOT expression .) ]
+  ! GRTE            [ reduce using rule 32 (expression -> NOT expression .) ]
+  ! LT              [ reduce using rule 32 (expression -> NOT expression .) ]
+  ! LTE             [ reduce using rule 32 (expression -> NOT expression .) ]
 
 
 state 59
 
-    (11) argse -> argse COMMA expression .
-    (26) expression -> expression . MUL expression
-    (27) expression -> expression . DIV expression
-    (28) expression -> expression . PLUS expression
-    (29) expression -> expression . MINUS expression
+    (23) statements -> statement statement .
+    (22) statements -> statement . statements
+    (23) statements -> statement . statement
+    (22) statements -> . statement statements
+    (23) statements -> . statement statement
+    (9) statement -> . IF LPAREN expression RPAREN statementc
+    (10) statement -> . IF LPAREN expression RPAREN statement
+    (11) statement -> . IF LPAREN expression RPAREN statementc ELSE statementc
+    (12) statement -> . IF LPAREN expression RPAREN statement ELSE statement
+    (13) statement -> . IF LPAREN expression RPAREN statementc ELSE statement
+    (14) statement -> . IF LPAREN expression RPAREN statement ELSE statementc
+    (19) statement -> . NAME LPAREN RPAREN SEMICOLON
+    (20) statement -> . NAME LPAREN argse RPAREN SEMICOLON
+    (21) statement -> . NAME LPAREN expression RPAREN SEMICOLON
+    (27) statement -> . NAME EQUALS expression SEMICOLON
+    (28) statement -> . RETURN expression SEMICOLON
 
-    RPAREN          reduce using rule 11 (argse -> argse COMMA expression .)
-    COMMA           reduce using rule 11 (argse -> argse COMMA expression .)
-    MUL             shift and go to state 39
-    DIV             shift and go to state 40
-    PLUS            shift and go to state 41
-    MINUS           shift and go to state 42
+    RBRAC           reduce using rule 23 (statements -> statement statement .)
+    IF              shift and go to state 15
+    NAME            shift and go to state 12
+    RETURN          shift and go to state 16
 
+    statement                      shift and go to state 59
+    statements                     shift and go to state 61
 
 state 60
 
-    (15) statement -> NAME LPAREN expression RPAREN SEMICOLON .
+    (24) statementc -> LBRAC statement RBRAC .
 
-    DEF             reduce using rule 15 (statement -> NAME LPAREN expression RPAREN SEMICOLON .)
-    $end            reduce using rule 15 (statement -> NAME LPAREN expression RPAREN SEMICOLON .)
-    RBRAC           reduce using rule 15 (statement -> NAME LPAREN expression RPAREN SEMICOLON .)
-    NAME            reduce using rule 15 (statement -> NAME LPAREN expression RPAREN SEMICOLON .)
-    RETURN          reduce using rule 15 (statement -> NAME LPAREN expression RPAREN SEMICOLON .)
+    DEF             reduce using rule 24 (statementc -> LBRAC statement RBRAC .)
+    $end            reduce using rule 24 (statementc -> LBRAC statement RBRAC .)
+    ELSE            reduce using rule 24 (statementc -> LBRAC statement RBRAC .)
+    RBRAC           reduce using rule 24 (statementc -> LBRAC statement RBRAC .)
+    IF              reduce using rule 24 (statementc -> LBRAC statement RBRAC .)
+    NAME            reduce using rule 24 (statementc -> LBRAC statement RBRAC .)
+    RETURN          reduce using rule 24 (statementc -> LBRAC statement RBRAC .)
 
 
 state 61
 
-    (12) argse -> expression COMMA expression .
-    (26) expression -> expression . MUL expression
-    (27) expression -> expression . DIV expression
-    (28) expression -> expression . PLUS expression
-    (29) expression -> expression . MINUS expression
+    (22) statements -> statement statements .
 
-    RPAREN          reduce using rule 12 (argse -> expression COMMA expression .)
-    COMMA           reduce using rule 12 (argse -> expression COMMA expression .)
-    MUL             shift and go to state 39
-    DIV             shift and go to state 40
-    PLUS            shift and go to state 41
-    MINUS           shift and go to state 42
+    RBRAC           reduce using rule 22 (statements -> statement statements .)
+
+
+state 62
+
+    (25) statementc -> LBRAC statements RBRAC .
+
+    DEF             reduce using rule 25 (statementc -> LBRAC statements RBRAC .)
+    $end            reduce using rule 25 (statementc -> LBRAC statements RBRAC .)
+    ELSE            reduce using rule 25 (statementc -> LBRAC statements RBRAC .)
+    RBRAC           reduce using rule 25 (statementc -> LBRAC statements RBRAC .)
+    IF              reduce using rule 25 (statementc -> LBRAC statements RBRAC .)
+    NAME            reduce using rule 25 (statementc -> LBRAC statements RBRAC .)
+    RETURN          reduce using rule 25 (statementc -> LBRAC statements RBRAC .)
+
+
+state 63
+
+    (26) statementc -> LBRAC empty RBRAC .
+
+    DEF             reduce using rule 26 (statementc -> LBRAC empty RBRAC .)
+    $end            reduce using rule 26 (statementc -> LBRAC empty RBRAC .)
+    ELSE            reduce using rule 26 (statementc -> LBRAC empty RBRAC .)
+    RBRAC           reduce using rule 26 (statementc -> LBRAC empty RBRAC .)
+    IF              reduce using rule 26 (statementc -> LBRAC empty RBRAC .)
+    NAME            reduce using rule 26 (statementc -> LBRAC empty RBRAC .)
+    RETURN          reduce using rule 26 (statementc -> LBRAC empty RBRAC .)
+
+
+state 64
+
+    (19) statement -> NAME LPAREN RPAREN SEMICOLON .
+
+    DEF             reduce using rule 19 (statement -> NAME LPAREN RPAREN SEMICOLON .)
+    $end            reduce using rule 19 (statement -> NAME LPAREN RPAREN SEMICOLON .)
+    RBRAC           reduce using rule 19 (statement -> NAME LPAREN RPAREN SEMICOLON .)
+    IF              reduce using rule 19 (statement -> NAME LPAREN RPAREN SEMICOLON .)
+    NAME            reduce using rule 19 (statement -> NAME LPAREN RPAREN SEMICOLON .)
+    RETURN          reduce using rule 19 (statement -> NAME LPAREN RPAREN SEMICOLON .)
+    ELSE            reduce using rule 19 (statement -> NAME LPAREN RPAREN SEMICOLON .)
+
+
+state 65
+
+    (20) statement -> NAME LPAREN argse RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 88
+
+
+state 66
+
+    (17) argse -> argse COMMA . expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
+
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
+
+    expression                     shift and go to state 89
+
+state 67
+
+    (21) statement -> NAME LPAREN expression RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 90
+
+
+state 68
+
+    (18) argse -> expression COMMA . expression
+    (29) expression -> . INT
+    (30) expression -> . NAME
+    (31) expression -> . STRING
+    (32) expression -> . NOT expression
+    (33) expression -> . NAME LPAREN RPAREN
+    (34) expression -> . NAME LPAREN argse RPAREN
+    (35) expression -> . NAME LPAREN expression RPAREN
+    (36) expression -> . expression MUL expression
+    (37) expression -> . expression DIV expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression AND expression
+    (41) expression -> . expression AND2 expression
+    (42) expression -> . expression OR2 expression
+    (43) expression -> . expression OR expression
+    (44) expression -> . expression DNE expression
+    (45) expression -> . expression EQ expression
+    (46) expression -> . expression GRT expression
+    (47) expression -> . expression GRTE expression
+    (48) expression -> . expression LT expression
+    (49) expression -> . expression LTE expression
+
+    INT             shift and go to state 27
+    NAME            shift and go to state 28
+    STRING          shift and go to state 29
+    NOT             shift and go to state 30
+
+    expression                     shift and go to state 91
+
+state 69
+
+    (27) statement -> NAME EQUALS expression SEMICOLON .
+
+    DEF             reduce using rule 27 (statement -> NAME EQUALS expression SEMICOLON .)
+    $end            reduce using rule 27 (statement -> NAME EQUALS expression SEMICOLON .)
+    RBRAC           reduce using rule 27 (statement -> NAME EQUALS expression SEMICOLON .)
+    IF              reduce using rule 27 (statement -> NAME EQUALS expression SEMICOLON .)
+    NAME            reduce using rule 27 (statement -> NAME EQUALS expression SEMICOLON .)
+    RETURN          reduce using rule 27 (statement -> NAME EQUALS expression SEMICOLON .)
+    ELSE            reduce using rule 27 (statement -> NAME EQUALS expression SEMICOLON .)
+
+
+state 70
+
+    (9) statement -> IF LPAREN expression RPAREN . statementc
+    (10) statement -> IF LPAREN expression RPAREN . statement
+    (11) statement -> IF LPAREN expression RPAREN . statementc ELSE statementc
+    (12) statement -> IF LPAREN expression RPAREN . statement ELSE statement
+    (13) statement -> IF LPAREN expression RPAREN . statementc ELSE statement
+    (14) statement -> IF LPAREN expression RPAREN . statement ELSE statementc
+    (24) statementc -> . LBRAC statement RBRAC
+    (25) statementc -> . LBRAC statements RBRAC
+    (26) statementc -> . LBRAC empty RBRAC
+    (9) statement -> . IF LPAREN expression RPAREN statementc
+    (10) statement -> . IF LPAREN expression RPAREN statement
+    (11) statement -> . IF LPAREN expression RPAREN statementc ELSE statementc
+    (12) statement -> . IF LPAREN expression RPAREN statement ELSE statement
+    (13) statement -> . IF LPAREN expression RPAREN statementc ELSE statement
+    (14) statement -> . IF LPAREN expression RPAREN statement ELSE statementc
+    (19) statement -> . NAME LPAREN RPAREN SEMICOLON
+    (20) statement -> . NAME LPAREN argse RPAREN SEMICOLON
+    (21) statement -> . NAME LPAREN expression RPAREN SEMICOLON
+    (27) statement -> . NAME EQUALS expression SEMICOLON
+    (28) statement -> . RETURN expression SEMICOLON
+
+    LBRAC           shift and go to state 17
+    IF              shift and go to state 15
+    NAME            shift and go to state 12
+    RETURN          shift and go to state 16
+
+    statementc                     shift and go to state 92
+    statement                      shift and go to state 93
+
+state 71
+
+    (36) expression -> expression MUL expression .
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
+
+    SEMICOLON       reduce using rule 36 (expression -> expression MUL expression .)
+    MUL             reduce using rule 36 (expression -> expression MUL expression .)
+    DIV             reduce using rule 36 (expression -> expression MUL expression .)
+    PLUS            reduce using rule 36 (expression -> expression MUL expression .)
+    MINUS           reduce using rule 36 (expression -> expression MUL expression .)
+    AND             reduce using rule 36 (expression -> expression MUL expression .)
+    AND2            reduce using rule 36 (expression -> expression MUL expression .)
+    OR2             reduce using rule 36 (expression -> expression MUL expression .)
+    OR              reduce using rule 36 (expression -> expression MUL expression .)
+    DNE             reduce using rule 36 (expression -> expression MUL expression .)
+    EQ              reduce using rule 36 (expression -> expression MUL expression .)
+    GRT             reduce using rule 36 (expression -> expression MUL expression .)
+    GRTE            reduce using rule 36 (expression -> expression MUL expression .)
+    LT              reduce using rule 36 (expression -> expression MUL expression .)
+    LTE             reduce using rule 36 (expression -> expression MUL expression .)
+    RPAREN          reduce using rule 36 (expression -> expression MUL expression .)
+    COMMA           reduce using rule 36 (expression -> expression MUL expression .)
+
+  ! MUL             [ shift and go to state 43 ]
+  ! DIV             [ shift and go to state 44 ]
+  ! PLUS            [ shift and go to state 45 ]
+  ! MINUS           [ shift and go to state 46 ]
+  ! AND             [ shift and go to state 47 ]
+  ! AND2            [ shift and go to state 48 ]
+  ! OR2             [ shift and go to state 49 ]
+  ! OR              [ shift and go to state 50 ]
+  ! DNE             [ shift and go to state 51 ]
+  ! EQ              [ shift and go to state 52 ]
+  ! GRT             [ shift and go to state 53 ]
+  ! GRTE            [ shift and go to state 54 ]
+  ! LT              [ shift and go to state 55 ]
+  ! LTE             [ shift and go to state 56 ]
+
+
+state 72
+
+    (37) expression -> expression DIV expression .
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
+
+    SEMICOLON       reduce using rule 37 (expression -> expression DIV expression .)
+    MUL             reduce using rule 37 (expression -> expression DIV expression .)
+    DIV             reduce using rule 37 (expression -> expression DIV expression .)
+    PLUS            reduce using rule 37 (expression -> expression DIV expression .)
+    MINUS           reduce using rule 37 (expression -> expression DIV expression .)
+    AND             reduce using rule 37 (expression -> expression DIV expression .)
+    AND2            reduce using rule 37 (expression -> expression DIV expression .)
+    OR2             reduce using rule 37 (expression -> expression DIV expression .)
+    OR              reduce using rule 37 (expression -> expression DIV expression .)
+    DNE             reduce using rule 37 (expression -> expression DIV expression .)
+    EQ              reduce using rule 37 (expression -> expression DIV expression .)
+    GRT             reduce using rule 37 (expression -> expression DIV expression .)
+    GRTE            reduce using rule 37 (expression -> expression DIV expression .)
+    LT              reduce using rule 37 (expression -> expression DIV expression .)
+    LTE             reduce using rule 37 (expression -> expression DIV expression .)
+    RPAREN          reduce using rule 37 (expression -> expression DIV expression .)
+    COMMA           reduce using rule 37 (expression -> expression DIV expression .)
+
+  ! MUL             [ shift and go to state 43 ]
+  ! DIV             [ shift and go to state 44 ]
+  ! PLUS            [ shift and go to state 45 ]
+  ! MINUS           [ shift and go to state 46 ]
+  ! AND             [ shift and go to state 47 ]
+  ! AND2            [ shift and go to state 48 ]
+  ! OR2             [ shift and go to state 49 ]
+  ! OR              [ shift and go to state 50 ]
+  ! DNE             [ shift and go to state 51 ]
+  ! EQ              [ shift and go to state 52 ]
+  ! GRT             [ shift and go to state 53 ]
+  ! GRTE            [ shift and go to state 54 ]
+  ! LT              [ shift and go to state 55 ]
+  ! LTE             [ shift and go to state 56 ]
+
+
+state 73
+
+    (38) expression -> expression PLUS expression .
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
+
+    SEMICOLON       reduce using rule 38 (expression -> expression PLUS expression .)
+    PLUS            reduce using rule 38 (expression -> expression PLUS expression .)
+    MINUS           reduce using rule 38 (expression -> expression PLUS expression .)
+    AND             reduce using rule 38 (expression -> expression PLUS expression .)
+    AND2            reduce using rule 38 (expression -> expression PLUS expression .)
+    OR2             reduce using rule 38 (expression -> expression PLUS expression .)
+    OR              reduce using rule 38 (expression -> expression PLUS expression .)
+    DNE             reduce using rule 38 (expression -> expression PLUS expression .)
+    EQ              reduce using rule 38 (expression -> expression PLUS expression .)
+    GRT             reduce using rule 38 (expression -> expression PLUS expression .)
+    GRTE            reduce using rule 38 (expression -> expression PLUS expression .)
+    LT              reduce using rule 38 (expression -> expression PLUS expression .)
+    LTE             reduce using rule 38 (expression -> expression PLUS expression .)
+    RPAREN          reduce using rule 38 (expression -> expression PLUS expression .)
+    COMMA           reduce using rule 38 (expression -> expression PLUS expression .)
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+
+  ! MUL             [ reduce using rule 38 (expression -> expression PLUS expression .) ]
+  ! DIV             [ reduce using rule 38 (expression -> expression PLUS expression .) ]
+  ! PLUS            [ shift and go to state 45 ]
+  ! MINUS           [ shift and go to state 46 ]
+  ! AND             [ shift and go to state 47 ]
+  ! AND2            [ shift and go to state 48 ]
+  ! OR2             [ shift and go to state 49 ]
+  ! OR              [ shift and go to state 50 ]
+  ! DNE             [ shift and go to state 51 ]
+  ! EQ              [ shift and go to state 52 ]
+  ! GRT             [ shift and go to state 53 ]
+  ! GRTE            [ shift and go to state 54 ]
+  ! LT              [ shift and go to state 55 ]
+  ! LTE             [ shift and go to state 56 ]
+
+
+state 74
+
+    (39) expression -> expression MINUS expression .
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
+
+    SEMICOLON       reduce using rule 39 (expression -> expression MINUS expression .)
+    PLUS            reduce using rule 39 (expression -> expression MINUS expression .)
+    MINUS           reduce using rule 39 (expression -> expression MINUS expression .)
+    AND             reduce using rule 39 (expression -> expression MINUS expression .)
+    AND2            reduce using rule 39 (expression -> expression MINUS expression .)
+    OR2             reduce using rule 39 (expression -> expression MINUS expression .)
+    OR              reduce using rule 39 (expression -> expression MINUS expression .)
+    DNE             reduce using rule 39 (expression -> expression MINUS expression .)
+    EQ              reduce using rule 39 (expression -> expression MINUS expression .)
+    GRT             reduce using rule 39 (expression -> expression MINUS expression .)
+    GRTE            reduce using rule 39 (expression -> expression MINUS expression .)
+    LT              reduce using rule 39 (expression -> expression MINUS expression .)
+    LTE             reduce using rule 39 (expression -> expression MINUS expression .)
+    RPAREN          reduce using rule 39 (expression -> expression MINUS expression .)
+    COMMA           reduce using rule 39 (expression -> expression MINUS expression .)
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+
+  ! MUL             [ reduce using rule 39 (expression -> expression MINUS expression .) ]
+  ! DIV             [ reduce using rule 39 (expression -> expression MINUS expression .) ]
+  ! PLUS            [ shift and go to state 45 ]
+  ! MINUS           [ shift and go to state 46 ]
+  ! AND             [ shift and go to state 47 ]
+  ! AND2            [ shift and go to state 48 ]
+  ! OR2             [ shift and go to state 49 ]
+  ! OR              [ shift and go to state 50 ]
+  ! DNE             [ shift and go to state 51 ]
+  ! EQ              [ shift and go to state 52 ]
+  ! GRT             [ shift and go to state 53 ]
+  ! GRTE            [ shift and go to state 54 ]
+  ! LT              [ shift and go to state 55 ]
+  ! LTE             [ shift and go to state 56 ]
+
+
+state 75
+
+    (40) expression -> expression AND expression .
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
+
+  ! shift/reduce conflict for MUL resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for AND2 resolved as shift
+  ! shift/reduce conflict for OR2 resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for DNE resolved as shift
+  ! shift/reduce conflict for EQ resolved as shift
+  ! shift/reduce conflict for GRT resolved as shift
+  ! shift/reduce conflict for GRTE resolved as shift
+  ! shift/reduce conflict for LT resolved as shift
+  ! shift/reduce conflict for LTE resolved as shift
+    SEMICOLON       reduce using rule 40 (expression -> expression AND expression .)
+    RPAREN          reduce using rule 40 (expression -> expression AND expression .)
+    COMMA           reduce using rule 40 (expression -> expression AND expression .)
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
+
+  ! MUL             [ reduce using rule 40 (expression -> expression AND expression .) ]
+  ! DIV             [ reduce using rule 40 (expression -> expression AND expression .) ]
+  ! PLUS            [ reduce using rule 40 (expression -> expression AND expression .) ]
+  ! MINUS           [ reduce using rule 40 (expression -> expression AND expression .) ]
+  ! AND             [ reduce using rule 40 (expression -> expression AND expression .) ]
+  ! AND2            [ reduce using rule 40 (expression -> expression AND expression .) ]
+  ! OR2             [ reduce using rule 40 (expression -> expression AND expression .) ]
+  ! OR              [ reduce using rule 40 (expression -> expression AND expression .) ]
+  ! DNE             [ reduce using rule 40 (expression -> expression AND expression .) ]
+  ! EQ              [ reduce using rule 40 (expression -> expression AND expression .) ]
+  ! GRT             [ reduce using rule 40 (expression -> expression AND expression .) ]
+  ! GRTE            [ reduce using rule 40 (expression -> expression AND expression .) ]
+  ! LT              [ reduce using rule 40 (expression -> expression AND expression .) ]
+  ! LTE             [ reduce using rule 40 (expression -> expression AND expression .) ]
+
+
+state 76
+
+    (41) expression -> expression AND2 expression .
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
+
+  ! shift/reduce conflict for MUL resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for AND2 resolved as shift
+  ! shift/reduce conflict for OR2 resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for DNE resolved as shift
+  ! shift/reduce conflict for EQ resolved as shift
+  ! shift/reduce conflict for GRT resolved as shift
+  ! shift/reduce conflict for GRTE resolved as shift
+  ! shift/reduce conflict for LT resolved as shift
+  ! shift/reduce conflict for LTE resolved as shift
+    SEMICOLON       reduce using rule 41 (expression -> expression AND2 expression .)
+    RPAREN          reduce using rule 41 (expression -> expression AND2 expression .)
+    COMMA           reduce using rule 41 (expression -> expression AND2 expression .)
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
+
+  ! MUL             [ reduce using rule 41 (expression -> expression AND2 expression .) ]
+  ! DIV             [ reduce using rule 41 (expression -> expression AND2 expression .) ]
+  ! PLUS            [ reduce using rule 41 (expression -> expression AND2 expression .) ]
+  ! MINUS           [ reduce using rule 41 (expression -> expression AND2 expression .) ]
+  ! AND             [ reduce using rule 41 (expression -> expression AND2 expression .) ]
+  ! AND2            [ reduce using rule 41 (expression -> expression AND2 expression .) ]
+  ! OR2             [ reduce using rule 41 (expression -> expression AND2 expression .) ]
+  ! OR              [ reduce using rule 41 (expression -> expression AND2 expression .) ]
+  ! DNE             [ reduce using rule 41 (expression -> expression AND2 expression .) ]
+  ! EQ              [ reduce using rule 41 (expression -> expression AND2 expression .) ]
+  ! GRT             [ reduce using rule 41 (expression -> expression AND2 expression .) ]
+  ! GRTE            [ reduce using rule 41 (expression -> expression AND2 expression .) ]
+  ! LT              [ reduce using rule 41 (expression -> expression AND2 expression .) ]
+  ! LTE             [ reduce using rule 41 (expression -> expression AND2 expression .) ]
+
+
+state 77
+
+    (42) expression -> expression OR2 expression .
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
+
+  ! shift/reduce conflict for MUL resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for AND2 resolved as shift
+  ! shift/reduce conflict for OR2 resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for DNE resolved as shift
+  ! shift/reduce conflict for EQ resolved as shift
+  ! shift/reduce conflict for GRT resolved as shift
+  ! shift/reduce conflict for GRTE resolved as shift
+  ! shift/reduce conflict for LT resolved as shift
+  ! shift/reduce conflict for LTE resolved as shift
+    SEMICOLON       reduce using rule 42 (expression -> expression OR2 expression .)
+    RPAREN          reduce using rule 42 (expression -> expression OR2 expression .)
+    COMMA           reduce using rule 42 (expression -> expression OR2 expression .)
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
+
+  ! MUL             [ reduce using rule 42 (expression -> expression OR2 expression .) ]
+  ! DIV             [ reduce using rule 42 (expression -> expression OR2 expression .) ]
+  ! PLUS            [ reduce using rule 42 (expression -> expression OR2 expression .) ]
+  ! MINUS           [ reduce using rule 42 (expression -> expression OR2 expression .) ]
+  ! AND             [ reduce using rule 42 (expression -> expression OR2 expression .) ]
+  ! AND2            [ reduce using rule 42 (expression -> expression OR2 expression .) ]
+  ! OR2             [ reduce using rule 42 (expression -> expression OR2 expression .) ]
+  ! OR              [ reduce using rule 42 (expression -> expression OR2 expression .) ]
+  ! DNE             [ reduce using rule 42 (expression -> expression OR2 expression .) ]
+  ! EQ              [ reduce using rule 42 (expression -> expression OR2 expression .) ]
+  ! GRT             [ reduce using rule 42 (expression -> expression OR2 expression .) ]
+  ! GRTE            [ reduce using rule 42 (expression -> expression OR2 expression .) ]
+  ! LT              [ reduce using rule 42 (expression -> expression OR2 expression .) ]
+  ! LTE             [ reduce using rule 42 (expression -> expression OR2 expression .) ]
+
+
+state 78
+
+    (43) expression -> expression OR expression .
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
+
+  ! shift/reduce conflict for MUL resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for AND2 resolved as shift
+  ! shift/reduce conflict for OR2 resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for DNE resolved as shift
+  ! shift/reduce conflict for EQ resolved as shift
+  ! shift/reduce conflict for GRT resolved as shift
+  ! shift/reduce conflict for GRTE resolved as shift
+  ! shift/reduce conflict for LT resolved as shift
+  ! shift/reduce conflict for LTE resolved as shift
+    SEMICOLON       reduce using rule 43 (expression -> expression OR expression .)
+    RPAREN          reduce using rule 43 (expression -> expression OR expression .)
+    COMMA           reduce using rule 43 (expression -> expression OR expression .)
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
+
+  ! MUL             [ reduce using rule 43 (expression -> expression OR expression .) ]
+  ! DIV             [ reduce using rule 43 (expression -> expression OR expression .) ]
+  ! PLUS            [ reduce using rule 43 (expression -> expression OR expression .) ]
+  ! MINUS           [ reduce using rule 43 (expression -> expression OR expression .) ]
+  ! AND             [ reduce using rule 43 (expression -> expression OR expression .) ]
+  ! AND2            [ reduce using rule 43 (expression -> expression OR expression .) ]
+  ! OR2             [ reduce using rule 43 (expression -> expression OR expression .) ]
+  ! OR              [ reduce using rule 43 (expression -> expression OR expression .) ]
+  ! DNE             [ reduce using rule 43 (expression -> expression OR expression .) ]
+  ! EQ              [ reduce using rule 43 (expression -> expression OR expression .) ]
+  ! GRT             [ reduce using rule 43 (expression -> expression OR expression .) ]
+  ! GRTE            [ reduce using rule 43 (expression -> expression OR expression .) ]
+  ! LT              [ reduce using rule 43 (expression -> expression OR expression .) ]
+  ! LTE             [ reduce using rule 43 (expression -> expression OR expression .) ]
+
+
+state 79
+
+    (44) expression -> expression DNE expression .
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
+
+  ! shift/reduce conflict for MUL resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for AND2 resolved as shift
+  ! shift/reduce conflict for OR2 resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for DNE resolved as shift
+  ! shift/reduce conflict for EQ resolved as shift
+  ! shift/reduce conflict for GRT resolved as shift
+  ! shift/reduce conflict for GRTE resolved as shift
+  ! shift/reduce conflict for LT resolved as shift
+  ! shift/reduce conflict for LTE resolved as shift
+    SEMICOLON       reduce using rule 44 (expression -> expression DNE expression .)
+    RPAREN          reduce using rule 44 (expression -> expression DNE expression .)
+    COMMA           reduce using rule 44 (expression -> expression DNE expression .)
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
+
+  ! MUL             [ reduce using rule 44 (expression -> expression DNE expression .) ]
+  ! DIV             [ reduce using rule 44 (expression -> expression DNE expression .) ]
+  ! PLUS            [ reduce using rule 44 (expression -> expression DNE expression .) ]
+  ! MINUS           [ reduce using rule 44 (expression -> expression DNE expression .) ]
+  ! AND             [ reduce using rule 44 (expression -> expression DNE expression .) ]
+  ! AND2            [ reduce using rule 44 (expression -> expression DNE expression .) ]
+  ! OR2             [ reduce using rule 44 (expression -> expression DNE expression .) ]
+  ! OR              [ reduce using rule 44 (expression -> expression DNE expression .) ]
+  ! DNE             [ reduce using rule 44 (expression -> expression DNE expression .) ]
+  ! EQ              [ reduce using rule 44 (expression -> expression DNE expression .) ]
+  ! GRT             [ reduce using rule 44 (expression -> expression DNE expression .) ]
+  ! GRTE            [ reduce using rule 44 (expression -> expression DNE expression .) ]
+  ! LT              [ reduce using rule 44 (expression -> expression DNE expression .) ]
+  ! LTE             [ reduce using rule 44 (expression -> expression DNE expression .) ]
+
+
+state 80
+
+    (45) expression -> expression EQ expression .
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
+
+  ! shift/reduce conflict for MUL resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for AND2 resolved as shift
+  ! shift/reduce conflict for OR2 resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for DNE resolved as shift
+  ! shift/reduce conflict for EQ resolved as shift
+  ! shift/reduce conflict for GRT resolved as shift
+  ! shift/reduce conflict for GRTE resolved as shift
+  ! shift/reduce conflict for LT resolved as shift
+  ! shift/reduce conflict for LTE resolved as shift
+    SEMICOLON       reduce using rule 45 (expression -> expression EQ expression .)
+    RPAREN          reduce using rule 45 (expression -> expression EQ expression .)
+    COMMA           reduce using rule 45 (expression -> expression EQ expression .)
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
+
+  ! MUL             [ reduce using rule 45 (expression -> expression EQ expression .) ]
+  ! DIV             [ reduce using rule 45 (expression -> expression EQ expression .) ]
+  ! PLUS            [ reduce using rule 45 (expression -> expression EQ expression .) ]
+  ! MINUS           [ reduce using rule 45 (expression -> expression EQ expression .) ]
+  ! AND             [ reduce using rule 45 (expression -> expression EQ expression .) ]
+  ! AND2            [ reduce using rule 45 (expression -> expression EQ expression .) ]
+  ! OR2             [ reduce using rule 45 (expression -> expression EQ expression .) ]
+  ! OR              [ reduce using rule 45 (expression -> expression EQ expression .) ]
+  ! DNE             [ reduce using rule 45 (expression -> expression EQ expression .) ]
+  ! EQ              [ reduce using rule 45 (expression -> expression EQ expression .) ]
+  ! GRT             [ reduce using rule 45 (expression -> expression EQ expression .) ]
+  ! GRTE            [ reduce using rule 45 (expression -> expression EQ expression .) ]
+  ! LT              [ reduce using rule 45 (expression -> expression EQ expression .) ]
+  ! LTE             [ reduce using rule 45 (expression -> expression EQ expression .) ]
+
+
+state 81
+
+    (46) expression -> expression GRT expression .
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
+
+  ! shift/reduce conflict for MUL resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for AND2 resolved as shift
+  ! shift/reduce conflict for OR2 resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for DNE resolved as shift
+  ! shift/reduce conflict for EQ resolved as shift
+  ! shift/reduce conflict for GRT resolved as shift
+  ! shift/reduce conflict for GRTE resolved as shift
+  ! shift/reduce conflict for LT resolved as shift
+  ! shift/reduce conflict for LTE resolved as shift
+    SEMICOLON       reduce using rule 46 (expression -> expression GRT expression .)
+    RPAREN          reduce using rule 46 (expression -> expression GRT expression .)
+    COMMA           reduce using rule 46 (expression -> expression GRT expression .)
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
+
+  ! MUL             [ reduce using rule 46 (expression -> expression GRT expression .) ]
+  ! DIV             [ reduce using rule 46 (expression -> expression GRT expression .) ]
+  ! PLUS            [ reduce using rule 46 (expression -> expression GRT expression .) ]
+  ! MINUS           [ reduce using rule 46 (expression -> expression GRT expression .) ]
+  ! AND             [ reduce using rule 46 (expression -> expression GRT expression .) ]
+  ! AND2            [ reduce using rule 46 (expression -> expression GRT expression .) ]
+  ! OR2             [ reduce using rule 46 (expression -> expression GRT expression .) ]
+  ! OR              [ reduce using rule 46 (expression -> expression GRT expression .) ]
+  ! DNE             [ reduce using rule 46 (expression -> expression GRT expression .) ]
+  ! EQ              [ reduce using rule 46 (expression -> expression GRT expression .) ]
+  ! GRT             [ reduce using rule 46 (expression -> expression GRT expression .) ]
+  ! GRTE            [ reduce using rule 46 (expression -> expression GRT expression .) ]
+  ! LT              [ reduce using rule 46 (expression -> expression GRT expression .) ]
+  ! LTE             [ reduce using rule 46 (expression -> expression GRT expression .) ]
+
+
+state 82
+
+    (47) expression -> expression GRTE expression .
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
+
+  ! shift/reduce conflict for MUL resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for AND2 resolved as shift
+  ! shift/reduce conflict for OR2 resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for DNE resolved as shift
+  ! shift/reduce conflict for EQ resolved as shift
+  ! shift/reduce conflict for GRT resolved as shift
+  ! shift/reduce conflict for GRTE resolved as shift
+  ! shift/reduce conflict for LT resolved as shift
+  ! shift/reduce conflict for LTE resolved as shift
+    SEMICOLON       reduce using rule 47 (expression -> expression GRTE expression .)
+    RPAREN          reduce using rule 47 (expression -> expression GRTE expression .)
+    COMMA           reduce using rule 47 (expression -> expression GRTE expression .)
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
+
+  ! MUL             [ reduce using rule 47 (expression -> expression GRTE expression .) ]
+  ! DIV             [ reduce using rule 47 (expression -> expression GRTE expression .) ]
+  ! PLUS            [ reduce using rule 47 (expression -> expression GRTE expression .) ]
+  ! MINUS           [ reduce using rule 47 (expression -> expression GRTE expression .) ]
+  ! AND             [ reduce using rule 47 (expression -> expression GRTE expression .) ]
+  ! AND2            [ reduce using rule 47 (expression -> expression GRTE expression .) ]
+  ! OR2             [ reduce using rule 47 (expression -> expression GRTE expression .) ]
+  ! OR              [ reduce using rule 47 (expression -> expression GRTE expression .) ]
+  ! DNE             [ reduce using rule 47 (expression -> expression GRTE expression .) ]
+  ! EQ              [ reduce using rule 47 (expression -> expression GRTE expression .) ]
+  ! GRT             [ reduce using rule 47 (expression -> expression GRTE expression .) ]
+  ! GRTE            [ reduce using rule 47 (expression -> expression GRTE expression .) ]
+  ! LT              [ reduce using rule 47 (expression -> expression GRTE expression .) ]
+  ! LTE             [ reduce using rule 47 (expression -> expression GRTE expression .) ]
+
+
+state 83
+
+    (48) expression -> expression LT expression .
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
+
+  ! shift/reduce conflict for MUL resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for AND2 resolved as shift
+  ! shift/reduce conflict for OR2 resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for DNE resolved as shift
+  ! shift/reduce conflict for EQ resolved as shift
+  ! shift/reduce conflict for GRT resolved as shift
+  ! shift/reduce conflict for GRTE resolved as shift
+  ! shift/reduce conflict for LT resolved as shift
+  ! shift/reduce conflict for LTE resolved as shift
+    SEMICOLON       reduce using rule 48 (expression -> expression LT expression .)
+    RPAREN          reduce using rule 48 (expression -> expression LT expression .)
+    COMMA           reduce using rule 48 (expression -> expression LT expression .)
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
+
+  ! MUL             [ reduce using rule 48 (expression -> expression LT expression .) ]
+  ! DIV             [ reduce using rule 48 (expression -> expression LT expression .) ]
+  ! PLUS            [ reduce using rule 48 (expression -> expression LT expression .) ]
+  ! MINUS           [ reduce using rule 48 (expression -> expression LT expression .) ]
+  ! AND             [ reduce using rule 48 (expression -> expression LT expression .) ]
+  ! AND2            [ reduce using rule 48 (expression -> expression LT expression .) ]
+  ! OR2             [ reduce using rule 48 (expression -> expression LT expression .) ]
+  ! OR              [ reduce using rule 48 (expression -> expression LT expression .) ]
+  ! DNE             [ reduce using rule 48 (expression -> expression LT expression .) ]
+  ! EQ              [ reduce using rule 48 (expression -> expression LT expression .) ]
+  ! GRT             [ reduce using rule 48 (expression -> expression LT expression .) ]
+  ! GRTE            [ reduce using rule 48 (expression -> expression LT expression .) ]
+  ! LT              [ reduce using rule 48 (expression -> expression LT expression .) ]
+  ! LTE             [ reduce using rule 48 (expression -> expression LT expression .) ]
+
+
+state 84
+
+    (49) expression -> expression LTE expression .
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
+
+  ! shift/reduce conflict for MUL resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for AND2 resolved as shift
+  ! shift/reduce conflict for OR2 resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for DNE resolved as shift
+  ! shift/reduce conflict for EQ resolved as shift
+  ! shift/reduce conflict for GRT resolved as shift
+  ! shift/reduce conflict for GRTE resolved as shift
+  ! shift/reduce conflict for LT resolved as shift
+  ! shift/reduce conflict for LTE resolved as shift
+    SEMICOLON       reduce using rule 49 (expression -> expression LTE expression .)
+    RPAREN          reduce using rule 49 (expression -> expression LTE expression .)
+    COMMA           reduce using rule 49 (expression -> expression LTE expression .)
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
+
+  ! MUL             [ reduce using rule 49 (expression -> expression LTE expression .) ]
+  ! DIV             [ reduce using rule 49 (expression -> expression LTE expression .) ]
+  ! PLUS            [ reduce using rule 49 (expression -> expression LTE expression .) ]
+  ! MINUS           [ reduce using rule 49 (expression -> expression LTE expression .) ]
+  ! AND             [ reduce using rule 49 (expression -> expression LTE expression .) ]
+  ! AND2            [ reduce using rule 49 (expression -> expression LTE expression .) ]
+  ! OR2             [ reduce using rule 49 (expression -> expression LTE expression .) ]
+  ! OR              [ reduce using rule 49 (expression -> expression LTE expression .) ]
+  ! DNE             [ reduce using rule 49 (expression -> expression LTE expression .) ]
+  ! EQ              [ reduce using rule 49 (expression -> expression LTE expression .) ]
+  ! GRT             [ reduce using rule 49 (expression -> expression LTE expression .) ]
+  ! GRTE            [ reduce using rule 49 (expression -> expression LTE expression .) ]
+  ! LT              [ reduce using rule 49 (expression -> expression LTE expression .) ]
+  ! LTE             [ reduce using rule 49 (expression -> expression LTE expression .) ]
+
+
+state 85
+
+    (33) expression -> NAME LPAREN RPAREN .
+
+    SEMICOLON       reduce using rule 33 (expression -> NAME LPAREN RPAREN .)
+    MUL             reduce using rule 33 (expression -> NAME LPAREN RPAREN .)
+    DIV             reduce using rule 33 (expression -> NAME LPAREN RPAREN .)
+    PLUS            reduce using rule 33 (expression -> NAME LPAREN RPAREN .)
+    MINUS           reduce using rule 33 (expression -> NAME LPAREN RPAREN .)
+    AND             reduce using rule 33 (expression -> NAME LPAREN RPAREN .)
+    AND2            reduce using rule 33 (expression -> NAME LPAREN RPAREN .)
+    OR2             reduce using rule 33 (expression -> NAME LPAREN RPAREN .)
+    OR              reduce using rule 33 (expression -> NAME LPAREN RPAREN .)
+    DNE             reduce using rule 33 (expression -> NAME LPAREN RPAREN .)
+    EQ              reduce using rule 33 (expression -> NAME LPAREN RPAREN .)
+    GRT             reduce using rule 33 (expression -> NAME LPAREN RPAREN .)
+    GRTE            reduce using rule 33 (expression -> NAME LPAREN RPAREN .)
+    LT              reduce using rule 33 (expression -> NAME LPAREN RPAREN .)
+    LTE             reduce using rule 33 (expression -> NAME LPAREN RPAREN .)
+    RPAREN          reduce using rule 33 (expression -> NAME LPAREN RPAREN .)
+    COMMA           reduce using rule 33 (expression -> NAME LPAREN RPAREN .)
+
+
+state 86
+
+    (34) expression -> NAME LPAREN argse . RPAREN
+    (17) argse -> argse . COMMA expression
+
+    RPAREN          shift and go to state 94
+    COMMA           shift and go to state 66
+
+
+state 87
+
+    (35) expression -> NAME LPAREN expression . RPAREN
+    (18) argse -> expression . COMMA expression
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
+
+    RPAREN          shift and go to state 95
+    COMMA           shift and go to state 68
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
+
+
+state 88
+
+    (20) statement -> NAME LPAREN argse RPAREN SEMICOLON .
+
+    DEF             reduce using rule 20 (statement -> NAME LPAREN argse RPAREN SEMICOLON .)
+    $end            reduce using rule 20 (statement -> NAME LPAREN argse RPAREN SEMICOLON .)
+    RBRAC           reduce using rule 20 (statement -> NAME LPAREN argse RPAREN SEMICOLON .)
+    IF              reduce using rule 20 (statement -> NAME LPAREN argse RPAREN SEMICOLON .)
+    NAME            reduce using rule 20 (statement -> NAME LPAREN argse RPAREN SEMICOLON .)
+    RETURN          reduce using rule 20 (statement -> NAME LPAREN argse RPAREN SEMICOLON .)
+    ELSE            reduce using rule 20 (statement -> NAME LPAREN argse RPAREN SEMICOLON .)
+
+
+state 89
+
+    (17) argse -> argse COMMA expression .
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
+
+    RPAREN          reduce using rule 17 (argse -> argse COMMA expression .)
+    COMMA           reduce using rule 17 (argse -> argse COMMA expression .)
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
+
+
+state 90
+
+    (21) statement -> NAME LPAREN expression RPAREN SEMICOLON .
+
+    DEF             reduce using rule 21 (statement -> NAME LPAREN expression RPAREN SEMICOLON .)
+    $end            reduce using rule 21 (statement -> NAME LPAREN expression RPAREN SEMICOLON .)
+    RBRAC           reduce using rule 21 (statement -> NAME LPAREN expression RPAREN SEMICOLON .)
+    IF              reduce using rule 21 (statement -> NAME LPAREN expression RPAREN SEMICOLON .)
+    NAME            reduce using rule 21 (statement -> NAME LPAREN expression RPAREN SEMICOLON .)
+    RETURN          reduce using rule 21 (statement -> NAME LPAREN expression RPAREN SEMICOLON .)
+    ELSE            reduce using rule 21 (statement -> NAME LPAREN expression RPAREN SEMICOLON .)
+
+
+state 91
+
+    (18) argse -> expression COMMA expression .
+    (36) expression -> expression . MUL expression
+    (37) expression -> expression . DIV expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . AND expression
+    (41) expression -> expression . AND2 expression
+    (42) expression -> expression . OR2 expression
+    (43) expression -> expression . OR expression
+    (44) expression -> expression . DNE expression
+    (45) expression -> expression . EQ expression
+    (46) expression -> expression . GRT expression
+    (47) expression -> expression . GRTE expression
+    (48) expression -> expression . LT expression
+    (49) expression -> expression . LTE expression
+
+    RPAREN          reduce using rule 18 (argse -> expression COMMA expression .)
+    COMMA           reduce using rule 18 (argse -> expression COMMA expression .)
+    MUL             shift and go to state 43
+    DIV             shift and go to state 44
+    PLUS            shift and go to state 45
+    MINUS           shift and go to state 46
+    AND             shift and go to state 47
+    AND2            shift and go to state 48
+    OR2             shift and go to state 49
+    OR              shift and go to state 50
+    DNE             shift and go to state 51
+    EQ              shift and go to state 52
+    GRT             shift and go to state 53
+    GRTE            shift and go to state 54
+    LT              shift and go to state 55
+    LTE             shift and go to state 56
+
+
+state 92
+
+    (9) statement -> IF LPAREN expression RPAREN statementc .
+    (11) statement -> IF LPAREN expression RPAREN statementc . ELSE statementc
+    (13) statement -> IF LPAREN expression RPAREN statementc . ELSE statement
+
+  ! shift/reduce conflict for ELSE resolved as shift
+    DEF             reduce using rule 9 (statement -> IF LPAREN expression RPAREN statementc .)
+    $end            reduce using rule 9 (statement -> IF LPAREN expression RPAREN statementc .)
+    RBRAC           reduce using rule 9 (statement -> IF LPAREN expression RPAREN statementc .)
+    IF              reduce using rule 9 (statement -> IF LPAREN expression RPAREN statementc .)
+    NAME            reduce using rule 9 (statement -> IF LPAREN expression RPAREN statementc .)
+    RETURN          reduce using rule 9 (statement -> IF LPAREN expression RPAREN statementc .)
+    ELSE            shift and go to state 96
+
+  ! ELSE            [ reduce using rule 9 (statement -> IF LPAREN expression RPAREN statementc .) ]
+
+
+state 93
+
+    (10) statement -> IF LPAREN expression RPAREN statement .
+    (12) statement -> IF LPAREN expression RPAREN statement . ELSE statement
+    (14) statement -> IF LPAREN expression RPAREN statement . ELSE statementc
+
+  ! shift/reduce conflict for ELSE resolved as shift
+    DEF             reduce using rule 10 (statement -> IF LPAREN expression RPAREN statement .)
+    $end            reduce using rule 10 (statement -> IF LPAREN expression RPAREN statement .)
+    RBRAC           reduce using rule 10 (statement -> IF LPAREN expression RPAREN statement .)
+    IF              reduce using rule 10 (statement -> IF LPAREN expression RPAREN statement .)
+    NAME            reduce using rule 10 (statement -> IF LPAREN expression RPAREN statement .)
+    RETURN          reduce using rule 10 (statement -> IF LPAREN expression RPAREN statement .)
+    ELSE            shift and go to state 97
+
+  ! ELSE            [ reduce using rule 10 (statement -> IF LPAREN expression RPAREN statement .) ]
+
+
+state 94
+
+    (34) expression -> NAME LPAREN argse RPAREN .
+
+    SEMICOLON       reduce using rule 34 (expression -> NAME LPAREN argse RPAREN .)
+    MUL             reduce using rule 34 (expression -> NAME LPAREN argse RPAREN .)
+    DIV             reduce using rule 34 (expression -> NAME LPAREN argse RPAREN .)
+    PLUS            reduce using rule 34 (expression -> NAME LPAREN argse RPAREN .)
+    MINUS           reduce using rule 34 (expression -> NAME LPAREN argse RPAREN .)
+    AND             reduce using rule 34 (expression -> NAME LPAREN argse RPAREN .)
+    AND2            reduce using rule 34 (expression -> NAME LPAREN argse RPAREN .)
+    OR2             reduce using rule 34 (expression -> NAME LPAREN argse RPAREN .)
+    OR              reduce using rule 34 (expression -> NAME LPAREN argse RPAREN .)
+    DNE             reduce using rule 34 (expression -> NAME LPAREN argse RPAREN .)
+    EQ              reduce using rule 34 (expression -> NAME LPAREN argse RPAREN .)
+    GRT             reduce using rule 34 (expression -> NAME LPAREN argse RPAREN .)
+    GRTE            reduce using rule 34 (expression -> NAME LPAREN argse RPAREN .)
+    LT              reduce using rule 34 (expression -> NAME LPAREN argse RPAREN .)
+    LTE             reduce using rule 34 (expression -> NAME LPAREN argse RPAREN .)
+    RPAREN          reduce using rule 34 (expression -> NAME LPAREN argse RPAREN .)
+    COMMA           reduce using rule 34 (expression -> NAME LPAREN argse RPAREN .)
+
+
+state 95
+
+    (35) expression -> NAME LPAREN expression RPAREN .
+
+    SEMICOLON       reduce using rule 35 (expression -> NAME LPAREN expression RPAREN .)
+    MUL             reduce using rule 35 (expression -> NAME LPAREN expression RPAREN .)
+    DIV             reduce using rule 35 (expression -> NAME LPAREN expression RPAREN .)
+    PLUS            reduce using rule 35 (expression -> NAME LPAREN expression RPAREN .)
+    MINUS           reduce using rule 35 (expression -> NAME LPAREN expression RPAREN .)
+    AND             reduce using rule 35 (expression -> NAME LPAREN expression RPAREN .)
+    AND2            reduce using rule 35 (expression -> NAME LPAREN expression RPAREN .)
+    OR2             reduce using rule 35 (expression -> NAME LPAREN expression RPAREN .)
+    OR              reduce using rule 35 (expression -> NAME LPAREN expression RPAREN .)
+    DNE             reduce using rule 35 (expression -> NAME LPAREN expression RPAREN .)
+    EQ              reduce using rule 35 (expression -> NAME LPAREN expression RPAREN .)
+    GRT             reduce using rule 35 (expression -> NAME LPAREN expression RPAREN .)
+    GRTE            reduce using rule 35 (expression -> NAME LPAREN expression RPAREN .)
+    LT              reduce using rule 35 (expression -> NAME LPAREN expression RPAREN .)
+    LTE             reduce using rule 35 (expression -> NAME LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 35 (expression -> NAME LPAREN expression RPAREN .)
+    COMMA           reduce using rule 35 (expression -> NAME LPAREN expression RPAREN .)
+
+
+state 96
+
+    (11) statement -> IF LPAREN expression RPAREN statementc ELSE . statementc
+    (13) statement -> IF LPAREN expression RPAREN statementc ELSE . statement
+    (24) statementc -> . LBRAC statement RBRAC
+    (25) statementc -> . LBRAC statements RBRAC
+    (26) statementc -> . LBRAC empty RBRAC
+    (9) statement -> . IF LPAREN expression RPAREN statementc
+    (10) statement -> . IF LPAREN expression RPAREN statement
+    (11) statement -> . IF LPAREN expression RPAREN statementc ELSE statementc
+    (12) statement -> . IF LPAREN expression RPAREN statement ELSE statement
+    (13) statement -> . IF LPAREN expression RPAREN statementc ELSE statement
+    (14) statement -> . IF LPAREN expression RPAREN statement ELSE statementc
+    (19) statement -> . NAME LPAREN RPAREN SEMICOLON
+    (20) statement -> . NAME LPAREN argse RPAREN SEMICOLON
+    (21) statement -> . NAME LPAREN expression RPAREN SEMICOLON
+    (27) statement -> . NAME EQUALS expression SEMICOLON
+    (28) statement -> . RETURN expression SEMICOLON
+
+    LBRAC           shift and go to state 17
+    IF              shift and go to state 15
+    NAME            shift and go to state 12
+    RETURN          shift and go to state 16
+
+    statementc                     shift and go to state 98
+    statement                      shift and go to state 99
+
+state 97
+
+    (12) statement -> IF LPAREN expression RPAREN statement ELSE . statement
+    (14) statement -> IF LPAREN expression RPAREN statement ELSE . statementc
+    (9) statement -> . IF LPAREN expression RPAREN statementc
+    (10) statement -> . IF LPAREN expression RPAREN statement
+    (11) statement -> . IF LPAREN expression RPAREN statementc ELSE statementc
+    (12) statement -> . IF LPAREN expression RPAREN statement ELSE statement
+    (13) statement -> . IF LPAREN expression RPAREN statementc ELSE statement
+    (14) statement -> . IF LPAREN expression RPAREN statement ELSE statementc
+    (19) statement -> . NAME LPAREN RPAREN SEMICOLON
+    (20) statement -> . NAME LPAREN argse RPAREN SEMICOLON
+    (21) statement -> . NAME LPAREN expression RPAREN SEMICOLON
+    (27) statement -> . NAME EQUALS expression SEMICOLON
+    (28) statement -> . RETURN expression SEMICOLON
+    (24) statementc -> . LBRAC statement RBRAC
+    (25) statementc -> . LBRAC statements RBRAC
+    (26) statementc -> . LBRAC empty RBRAC
+
+    IF              shift and go to state 15
+    NAME            shift and go to state 12
+    RETURN          shift and go to state 16
+    LBRAC           shift and go to state 17
+
+    statement                      shift and go to state 100
+    statementc                     shift and go to state 101
+
+state 98
+
+    (11) statement -> IF LPAREN expression RPAREN statementc ELSE statementc .
+
+    DEF             reduce using rule 11 (statement -> IF LPAREN expression RPAREN statementc ELSE statementc .)
+    $end            reduce using rule 11 (statement -> IF LPAREN expression RPAREN statementc ELSE statementc .)
+    RBRAC           reduce using rule 11 (statement -> IF LPAREN expression RPAREN statementc ELSE statementc .)
+    IF              reduce using rule 11 (statement -> IF LPAREN expression RPAREN statementc ELSE statementc .)
+    NAME            reduce using rule 11 (statement -> IF LPAREN expression RPAREN statementc ELSE statementc .)
+    RETURN          reduce using rule 11 (statement -> IF LPAREN expression RPAREN statementc ELSE statementc .)
+    ELSE            reduce using rule 11 (statement -> IF LPAREN expression RPAREN statementc ELSE statementc .)
+
+
+state 99
+
+    (13) statement -> IF LPAREN expression RPAREN statementc ELSE statement .
+
+    DEF             reduce using rule 13 (statement -> IF LPAREN expression RPAREN statementc ELSE statement .)
+    $end            reduce using rule 13 (statement -> IF LPAREN expression RPAREN statementc ELSE statement .)
+    RBRAC           reduce using rule 13 (statement -> IF LPAREN expression RPAREN statementc ELSE statement .)
+    IF              reduce using rule 13 (statement -> IF LPAREN expression RPAREN statementc ELSE statement .)
+    NAME            reduce using rule 13 (statement -> IF LPAREN expression RPAREN statementc ELSE statement .)
+    RETURN          reduce using rule 13 (statement -> IF LPAREN expression RPAREN statementc ELSE statement .)
+    ELSE            reduce using rule 13 (statement -> IF LPAREN expression RPAREN statementc ELSE statement .)
+
+
+state 100
+
+    (12) statement -> IF LPAREN expression RPAREN statement ELSE statement .
+
+    DEF             reduce using rule 12 (statement -> IF LPAREN expression RPAREN statement ELSE statement .)
+    $end            reduce using rule 12 (statement -> IF LPAREN expression RPAREN statement ELSE statement .)
+    RBRAC           reduce using rule 12 (statement -> IF LPAREN expression RPAREN statement ELSE statement .)
+    IF              reduce using rule 12 (statement -> IF LPAREN expression RPAREN statement ELSE statement .)
+    NAME            reduce using rule 12 (statement -> IF LPAREN expression RPAREN statement ELSE statement .)
+    RETURN          reduce using rule 12 (statement -> IF LPAREN expression RPAREN statement ELSE statement .)
+    ELSE            reduce using rule 12 (statement -> IF LPAREN expression RPAREN statement ELSE statement .)
+
+
+state 101
+
+    (14) statement -> IF LPAREN expression RPAREN statement ELSE statementc .
+
+    DEF             reduce using rule 14 (statement -> IF LPAREN expression RPAREN statement ELSE statementc .)
+    $end            reduce using rule 14 (statement -> IF LPAREN expression RPAREN statement ELSE statementc .)
+    RBRAC           reduce using rule 14 (statement -> IF LPAREN expression RPAREN statement ELSE statementc .)
+    IF              reduce using rule 14 (statement -> IF LPAREN expression RPAREN statement ELSE statementc .)
+    NAME            reduce using rule 14 (statement -> IF LPAREN expression RPAREN statement ELSE statementc .)
+    RETURN          reduce using rule 14 (statement -> IF LPAREN expression RPAREN statement ELSE statementc .)
+    ELSE            reduce using rule 14 (statement -> IF LPAREN expression RPAREN statement ELSE statementc .)
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
 WARNING: shift/reduce conflict for DEF in state 4 resolved as shift
+WARNING: shift/reduce conflict for MUL in state 58 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 58 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 58 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 58 resolved as shift
+WARNING: shift/reduce conflict for AND in state 58 resolved as shift
+WARNING: shift/reduce conflict for AND2 in state 58 resolved as shift
+WARNING: shift/reduce conflict for OR2 in state 58 resolved as shift
+WARNING: shift/reduce conflict for OR in state 58 resolved as shift
+WARNING: shift/reduce conflict for DNE in state 58 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 58 resolved as shift
+WARNING: shift/reduce conflict for GRT in state 58 resolved as shift
+WARNING: shift/reduce conflict for GRTE in state 58 resolved as shift
+WARNING: shift/reduce conflict for LT in state 58 resolved as shift
+WARNING: shift/reduce conflict for LTE in state 58 resolved as shift
+WARNING: shift/reduce conflict for MUL in state 75 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 75 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 75 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 75 resolved as shift
+WARNING: shift/reduce conflict for AND in state 75 resolved as shift
+WARNING: shift/reduce conflict for AND2 in state 75 resolved as shift
+WARNING: shift/reduce conflict for OR2 in state 75 resolved as shift
+WARNING: shift/reduce conflict for OR in state 75 resolved as shift
+WARNING: shift/reduce conflict for DNE in state 75 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 75 resolved as shift
+WARNING: shift/reduce conflict for GRT in state 75 resolved as shift
+WARNING: shift/reduce conflict for GRTE in state 75 resolved as shift
+WARNING: shift/reduce conflict for LT in state 75 resolved as shift
+WARNING: shift/reduce conflict for LTE in state 75 resolved as shift
+WARNING: shift/reduce conflict for MUL in state 76 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 76 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 76 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 76 resolved as shift
+WARNING: shift/reduce conflict for AND in state 76 resolved as shift
+WARNING: shift/reduce conflict for AND2 in state 76 resolved as shift
+WARNING: shift/reduce conflict for OR2 in state 76 resolved as shift
+WARNING: shift/reduce conflict for OR in state 76 resolved as shift
+WARNING: shift/reduce conflict for DNE in state 76 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 76 resolved as shift
+WARNING: shift/reduce conflict for GRT in state 76 resolved as shift
+WARNING: shift/reduce conflict for GRTE in state 76 resolved as shift
+WARNING: shift/reduce conflict for LT in state 76 resolved as shift
+WARNING: shift/reduce conflict for LTE in state 76 resolved as shift
+WARNING: shift/reduce conflict for MUL in state 77 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 77 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 77 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 77 resolved as shift
+WARNING: shift/reduce conflict for AND in state 77 resolved as shift
+WARNING: shift/reduce conflict for AND2 in state 77 resolved as shift
+WARNING: shift/reduce conflict for OR2 in state 77 resolved as shift
+WARNING: shift/reduce conflict for OR in state 77 resolved as shift
+WARNING: shift/reduce conflict for DNE in state 77 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 77 resolved as shift
+WARNING: shift/reduce conflict for GRT in state 77 resolved as shift
+WARNING: shift/reduce conflict for GRTE in state 77 resolved as shift
+WARNING: shift/reduce conflict for LT in state 77 resolved as shift
+WARNING: shift/reduce conflict for LTE in state 77 resolved as shift
+WARNING: shift/reduce conflict for MUL in state 78 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 78 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 78 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 78 resolved as shift
+WARNING: shift/reduce conflict for AND in state 78 resolved as shift
+WARNING: shift/reduce conflict for AND2 in state 78 resolved as shift
+WARNING: shift/reduce conflict for OR2 in state 78 resolved as shift
+WARNING: shift/reduce conflict for OR in state 78 resolved as shift
+WARNING: shift/reduce conflict for DNE in state 78 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 78 resolved as shift
+WARNING: shift/reduce conflict for GRT in state 78 resolved as shift
+WARNING: shift/reduce conflict for GRTE in state 78 resolved as shift
+WARNING: shift/reduce conflict for LT in state 78 resolved as shift
+WARNING: shift/reduce conflict for LTE in state 78 resolved as shift
+WARNING: shift/reduce conflict for MUL in state 79 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 79 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 79 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 79 resolved as shift
+WARNING: shift/reduce conflict for AND in state 79 resolved as shift
+WARNING: shift/reduce conflict for AND2 in state 79 resolved as shift
+WARNING: shift/reduce conflict for OR2 in state 79 resolved as shift
+WARNING: shift/reduce conflict for OR in state 79 resolved as shift
+WARNING: shift/reduce conflict for DNE in state 79 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 79 resolved as shift
+WARNING: shift/reduce conflict for GRT in state 79 resolved as shift
+WARNING: shift/reduce conflict for GRTE in state 79 resolved as shift
+WARNING: shift/reduce conflict for LT in state 79 resolved as shift
+WARNING: shift/reduce conflict for LTE in state 79 resolved as shift
+WARNING: shift/reduce conflict for MUL in state 80 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 80 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 80 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 80 resolved as shift
+WARNING: shift/reduce conflict for AND in state 80 resolved as shift
+WARNING: shift/reduce conflict for AND2 in state 80 resolved as shift
+WARNING: shift/reduce conflict for OR2 in state 80 resolved as shift
+WARNING: shift/reduce conflict for OR in state 80 resolved as shift
+WARNING: shift/reduce conflict for DNE in state 80 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 80 resolved as shift
+WARNING: shift/reduce conflict for GRT in state 80 resolved as shift
+WARNING: shift/reduce conflict for GRTE in state 80 resolved as shift
+WARNING: shift/reduce conflict for LT in state 80 resolved as shift
+WARNING: shift/reduce conflict for LTE in state 80 resolved as shift
+WARNING: shift/reduce conflict for MUL in state 81 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 81 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 81 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 81 resolved as shift
+WARNING: shift/reduce conflict for AND in state 81 resolved as shift
+WARNING: shift/reduce conflict for AND2 in state 81 resolved as shift
+WARNING: shift/reduce conflict for OR2 in state 81 resolved as shift
+WARNING: shift/reduce conflict for OR in state 81 resolved as shift
+WARNING: shift/reduce conflict for DNE in state 81 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 81 resolved as shift
+WARNING: shift/reduce conflict for GRT in state 81 resolved as shift
+WARNING: shift/reduce conflict for GRTE in state 81 resolved as shift
+WARNING: shift/reduce conflict for LT in state 81 resolved as shift
+WARNING: shift/reduce conflict for LTE in state 81 resolved as shift
+WARNING: shift/reduce conflict for MUL in state 82 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 82 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 82 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 82 resolved as shift
+WARNING: shift/reduce conflict for AND in state 82 resolved as shift
+WARNING: shift/reduce conflict for AND2 in state 82 resolved as shift
+WARNING: shift/reduce conflict for OR2 in state 82 resolved as shift
+WARNING: shift/reduce conflict for OR in state 82 resolved as shift
+WARNING: shift/reduce conflict for DNE in state 82 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 82 resolved as shift
+WARNING: shift/reduce conflict for GRT in state 82 resolved as shift
+WARNING: shift/reduce conflict for GRTE in state 82 resolved as shift
+WARNING: shift/reduce conflict for LT in state 82 resolved as shift
+WARNING: shift/reduce conflict for LTE in state 82 resolved as shift
+WARNING: shift/reduce conflict for MUL in state 83 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 83 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 83 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 83 resolved as shift
+WARNING: shift/reduce conflict for AND in state 83 resolved as shift
+WARNING: shift/reduce conflict for AND2 in state 83 resolved as shift
+WARNING: shift/reduce conflict for OR2 in state 83 resolved as shift
+WARNING: shift/reduce conflict for OR in state 83 resolved as shift
+WARNING: shift/reduce conflict for DNE in state 83 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 83 resolved as shift
+WARNING: shift/reduce conflict for GRT in state 83 resolved as shift
+WARNING: shift/reduce conflict for GRTE in state 83 resolved as shift
+WARNING: shift/reduce conflict for LT in state 83 resolved as shift
+WARNING: shift/reduce conflict for LTE in state 83 resolved as shift
+WARNING: shift/reduce conflict for MUL in state 84 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 84 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 84 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 84 resolved as shift
+WARNING: shift/reduce conflict for AND in state 84 resolved as shift
+WARNING: shift/reduce conflict for AND2 in state 84 resolved as shift
+WARNING: shift/reduce conflict for OR2 in state 84 resolved as shift
+WARNING: shift/reduce conflict for OR in state 84 resolved as shift
+WARNING: shift/reduce conflict for DNE in state 84 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 84 resolved as shift
+WARNING: shift/reduce conflict for GRT in state 84 resolved as shift
+WARNING: shift/reduce conflict for GRTE in state 84 resolved as shift
+WARNING: shift/reduce conflict for LT in state 84 resolved as shift
+WARNING: shift/reduce conflict for LTE in state 84 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 92 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 93 resolved as shift

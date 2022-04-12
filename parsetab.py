@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftPLUSMINUSleftMULDIVCOMMA DEF DIV EQUALS INT LBRAC LPAREN MINUS MUL NAME PLUS RBRAC RETURN RPAREN SEMICOLON STRING\n    code : function\n         | code code\n    \n    function : DEF NAME LPAREN RPAREN statement\n             | DEF NAME LPAREN RPAREN statementc\n    \n    function : DEF NAME LPAREN NAME RPAREN statement\n             | DEF NAME LPAREN NAME RPAREN statementc\n    \n    function : DEF NAME LPAREN args RPAREN statement\n             | DEF NAME LPAREN args RPAREN statementc\n    \n  args : args COMMA NAME\n  \n  args : NAME COMMA NAME\n  \n  argse : argse COMMA expression\n  \n  argse : expression COMMA expression\n  \n    statement : NAME LPAREN RPAREN SEMICOLON\n    \n    statement : NAME LPAREN argse RPAREN SEMICOLON\n    \n    statement : NAME LPAREN expression RPAREN SEMICOLON\n    \n    statements : statement statements\n               | statement statement\n    \n    statementc : LBRAC statement RBRAC\n               | LBRAC statements RBRAC\n               | LBRAC empty RBRAC\n    \n    statement : NAME EQUALS expression SEMICOLON\n    \n    statement : RETURN expression SEMICOLON\n    \n    expression : INT\n               | NAME\n    \n  expression : STRING\n  \n    expression : expression MUL expression\n               | expression DIV expression\n               | expression PLUS expression\n               | expression MINUS expression\n    \n    empty :\n    '
+_lr_signature = 'leftPLUSMINUSleftMULDIVAND AND2 COMMA DEF DIV DNE ELSE EQ EQUALS GRT GRTE IF INT LBRAC LPAREN LT LTE MINUS MUL NAME NOT OR OR2 PLUS RBRAC RETURN RPAREN SEMICOLON STRING\n    code : function\n         | code code\n    \n    function : DEF NAME LPAREN RPAREN statement\n             | DEF NAME LPAREN RPAREN statementc\n    \n    function : DEF NAME LPAREN NAME RPAREN statement\n             | DEF NAME LPAREN NAME RPAREN statementc\n    \n    function : DEF NAME LPAREN args RPAREN statement\n             | DEF NAME LPAREN args RPAREN statementc\n    \n    statement : IF LPAREN expression RPAREN statementc\n              | IF LPAREN expression RPAREN statement\n    \n    statement : IF LPAREN expression RPAREN statementc ELSE statementc\n                | IF LPAREN expression RPAREN statement ELSE statement\n                | IF LPAREN expression RPAREN statementc ELSE statement\n                | IF LPAREN expression RPAREN statement ELSE statementc\n    \n  args : args COMMA NAME\n  \n  args : NAME COMMA NAME\n  \n  argse : argse COMMA expression\n  \n  argse : expression COMMA expression\n  \n    statement : NAME LPAREN RPAREN SEMICOLON\n    \n    statement : NAME LPAREN argse RPAREN SEMICOLON\n    \n    statement : NAME LPAREN expression RPAREN SEMICOLON\n    \n    statements : statement statements\n               | statement statement\n    \n    statementc : LBRAC statement RBRAC\n               | LBRAC statements RBRAC\n               | LBRAC empty RBRAC\n    \n    statement : NAME EQUALS expression SEMICOLON\n    \n    statement : RETURN expression SEMICOLON\n    \n    expression : INT\n               | NAME\n    \n  expression : STRING\n  \n    expression : NOT expression\n    \n    expression : NAME LPAREN RPAREN \n    \n    expression : NAME LPAREN argse RPAREN\n    \n    expression : NAME LPAREN expression RPAREN\n    \n    expression : expression MUL expression\n               | expression DIV expression\n               | expression PLUS expression\n               | expression MINUS expression\n               | expression AND expression\n               | expression AND2 expression\n               | expression OR2 expression\n               | expression OR expression\n               | expression DNE expression\n               | expression EQ expression\n               | expression GRT expression\n               | expression GRTE expression\n               | expression LT expression\n               | expression LTE expression\n    \n    empty :\n    '
     
-_lr_action_items = {'DEF':([0,1,2,4,13,14,19,20,31,32,38,44,46,47,48,53,58,60,],[3,3,-1,3,-3,-4,-5,-6,-7,-8,-22,-18,-19,-20,-13,-21,-14,-15,]),'$end':([1,2,4,13,14,19,20,31,32,38,44,46,47,48,53,58,60,],[0,-1,-2,-3,-4,-5,-6,-7,-8,-22,-18,-19,-20,-13,-21,-14,-15,]),'NAME':([3,6,8,10,11,15,16,17,18,22,23,28,38,39,40,41,42,43,48,50,52,53,58,60,],[5,7,12,12,21,26,12,12,33,26,26,12,-22,26,26,26,26,12,-13,26,26,-21,-14,-15,]),'LPAREN':([5,12,],[6,22,]),'RPAREN':([6,7,9,21,22,25,26,27,33,35,36,54,55,56,57,59,61,],[8,10,17,-10,34,-23,-24,-25,-9,49,51,-26,-27,-28,-29,-11,-12,]),'COMMA':([7,9,21,25,26,27,33,35,36,54,55,56,57,59,61,],[11,18,-10,-23,-24,-25,-9,50,52,-26,-27,-28,-29,-11,-12,]),'RETURN':([8,10,16,17,28,38,43,48,53,58,60,],[15,15,15,15,15,-22,15,-13,-21,-14,-15,]),'LBRAC':([8,10,17,],[16,16,16,]),'EQUALS':([12,],[23,]),'INT':([15,22,23,39,40,41,42,50,52,],[25,25,25,25,25,25,25,25,25,]),'STRING':([15,22,23,39,40,41,42,50,52,],[27,27,27,27,27,27,27,27,27,]),'RBRAC':([16,28,29,30,38,43,45,48,53,58,60,],[-30,44,46,47,-22,-17,-16,-13,-21,-14,-15,]),'SEMICOLON':([24,25,26,27,34,37,49,51,54,55,56,57,],[38,-23,-24,-25,48,53,58,60,-26,-27,-28,-29,]),'MUL':([24,25,26,27,36,37,54,55,56,57,59,61,],[39,-23,-24,-25,39,39,-26,-27,39,39,39,39,]),'DIV':([24,25,26,27,36,37,54,55,56,57,59,61,],[40,-23,-24,-25,40,40,-26,-27,40,40,40,40,]),'PLUS':([24,25,26,27,36,37,54,55,56,57,59,61,],[41,-23,-24,-25,41,41,-26,-27,-28,-29,41,41,]),'MINUS':([24,25,26,27,36,37,54,55,56,57,59,61,],[42,-23,-24,-25,42,42,-26,-27,-28,-29,42,42,]),}
+_lr_action_items = {'DEF':([0,1,2,4,13,14,20,21,34,35,42,60,62,63,64,69,88,90,92,93,98,99,100,101,],[3,3,-1,3,-3,-4,-5,-6,-7,-8,-28,-24,-25,-26,-19,-27,-20,-21,-9,-10,-11,-13,-12,-14,]),'$end':([1,2,4,13,14,20,21,34,35,42,60,62,63,64,69,88,90,92,93,98,99,100,101,],[0,-1,-2,-3,-4,-5,-6,-7,-8,-28,-24,-25,-26,-19,-27,-20,-21,-9,-10,-11,-13,-12,-14,]),'NAME':([3,6,8,10,11,16,17,18,19,23,24,25,30,31,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,59,60,62,63,64,66,68,69,70,88,90,92,93,96,97,98,99,100,101,],[5,7,12,12,22,28,12,12,36,28,28,28,28,12,-28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,12,-24,-25,-26,-19,28,28,-27,12,-20,-21,-9,-10,12,12,-11,-13,-12,-14,]),'LPAREN':([5,12,15,28,],[6,23,25,57,]),'RPAREN':([6,7,9,22,23,27,28,29,36,38,39,41,57,58,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,89,91,94,95,],[8,10,18,-16,37,-29,-30,-31,-15,65,67,70,85,-32,-36,-37,-38,-39,-40,-41,-42,-43,-44,-45,-46,-47,-48,-49,-33,94,95,-17,-18,-34,-35,]),'COMMA':([7,9,22,27,28,29,36,38,39,58,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,89,91,94,95,],[11,19,-16,-29,-30,-31,-15,66,68,-32,-36,-37,-38,-39,-40,-41,-42,-43,-44,-45,-46,-47,-48,-49,-33,66,68,-17,-18,-34,-35,]),'IF':([8,10,17,18,31,42,59,60,62,63,64,69,70,88,90,92,93,96,97,98,99,100,101,],[15,15,15,15,15,-28,15,-24,-25,-26,-19,-27,15,-20,-21,-9,-10,15,15,-11,-13,-12,-14,]),'RETURN':([8,10,17,18,31,42,59,60,62,63,64,69,70,88,90,92,93,96,97,98,99,100,101,],[16,16,16,16,16,-28,16,-24,-25,-26,-19,-27,16,-20,-21,-9,-10,16,16,-11,-13,-12,-14,]),'LBRAC':([8,10,18,70,96,97,],[17,17,17,17,17,17,]),'EQUALS':([12,],[24,]),'INT':([16,23,24,25,30,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,66,68,],[27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,]),'STRING':([16,23,24,25,30,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,66,68,],[29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,]),'NOT':([16,23,24,25,30,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,66,68,],[30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,]),'RBRAC':([17,31,32,33,42,59,60,61,62,63,64,69,88,90,92,93,98,99,100,101,],[-50,60,62,63,-28,-23,-24,-22,-25,-26,-19,-27,-20,-21,-9,-10,-11,-13,-12,-14,]),'SEMICOLON':([26,27,28,29,37,40,58,65,67,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,94,95,],[42,-29,-30,-31,64,69,-32,88,90,-36,-37,-38,-39,-40,-41,-42,-43,-44,-45,-46,-47,-48,-49,-33,-34,-35,]),'MUL':([26,27,28,29,39,40,41,58,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,87,89,91,94,95,],[43,-29,-30,-31,43,43,43,43,-36,-37,43,43,43,43,43,43,43,43,43,43,43,43,-33,43,43,43,-34,-35,]),'DIV':([26,27,28,29,39,40,41,58,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,87,89,91,94,95,],[44,-29,-30,-31,44,44,44,44,-36,-37,44,44,44,44,44,44,44,44,44,44,44,44,-33,44,44,44,-34,-35,]),'PLUS':([26,27,28,29,39,40,41,58,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,87,89,91,94,95,],[45,-29,-30,-31,45,45,45,45,-36,-37,-38,-39,45,45,45,45,45,45,45,45,45,45,-33,45,45,45,-34,-35,]),'MINUS':([26,27,28,29,39,40,41,58,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,87,89,91,94,95,],[46,-29,-30,-31,46,46,46,46,-36,-37,-38,-39,46,46,46,46,46,46,46,46,46,46,-33,46,46,46,-34,-35,]),'AND':([26,27,28,29,39,40,41,58,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,87,89,91,94,95,],[47,-29,-30,-31,47,47,47,47,-36,-37,-38,-39,47,47,47,47,47,47,47,47,47,47,-33,47,47,47,-34,-35,]),'AND2':([26,27,28,29,39,40,41,58,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,87,89,91,94,95,],[48,-29,-30,-31,48,48,48,48,-36,-37,-38,-39,48,48,48,48,48,48,48,48,48,48,-33,48,48,48,-34,-35,]),'OR2':([26,27,28,29,39,40,41,58,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,87,89,91,94,95,],[49,-29,-30,-31,49,49,49,49,-36,-37,-38,-39,49,49,49,49,49,49,49,49,49,49,-33,49,49,49,-34,-35,]),'OR':([26,27,28,29,39,40,41,58,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,87,89,91,94,95,],[50,-29,-30,-31,50,50,50,50,-36,-37,-38,-39,50,50,50,50,50,50,50,50,50,50,-33,50,50,50,-34,-35,]),'DNE':([26,27,28,29,39,40,41,58,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,87,89,91,94,95,],[51,-29,-30,-31,51,51,51,51,-36,-37,-38,-39,51,51,51,51,51,51,51,51,51,51,-33,51,51,51,-34,-35,]),'EQ':([26,27,28,29,39,40,41,58,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,87,89,91,94,95,],[52,-29,-30,-31,52,52,52,52,-36,-37,-38,-39,52,52,52,52,52,52,52,52,52,52,-33,52,52,52,-34,-35,]),'GRT':([26,27,28,29,39,40,41,58,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,87,89,91,94,95,],[53,-29,-30,-31,53,53,53,53,-36,-37,-38,-39,53,53,53,53,53,53,53,53,53,53,-33,53,53,53,-34,-35,]),'GRTE':([26,27,28,29,39,40,41,58,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,87,89,91,94,95,],[54,-29,-30,-31,54,54,54,54,-36,-37,-38,-39,54,54,54,54,54,54,54,54,54,54,-33,54,54,54,-34,-35,]),'LT':([26,27,28,29,39,40,41,58,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,87,89,91,94,95,],[55,-29,-30,-31,55,55,55,55,-36,-37,-38,-39,55,55,55,55,55,55,55,55,55,55,-33,55,55,55,-34,-35,]),'LTE':([26,27,28,29,39,40,41,58,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,87,89,91,94,95,],[56,-29,-30,-31,56,56,56,56,-36,-37,-38,-39,56,56,56,56,56,56,56,56,56,56,-33,56,56,56,-34,-35,]),'ELSE':([42,60,62,63,64,69,88,90,92,93,98,99,100,101,],[-28,-24,-25,-26,-19,-27,-20,-21,96,97,-11,-13,-12,-14,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'code':([0,1,4,],[1,4,4,]),'function':([0,1,4,],[2,2,2,]),'args':([6,],[9,]),'statement':([8,10,16,17,28,43,],[13,19,28,31,43,43,]),'statementc':([8,10,17,],[14,20,32,]),'expression':([15,22,23,39,40,41,42,50,52,],[24,36,37,54,55,56,57,59,61,]),'statements':([16,28,43,],[29,45,45,]),'empty':([16,],[30,]),'argse':([22,],[35,]),}
+_lr_goto_items = {'code':([0,1,4,],[1,4,4,]),'function':([0,1,4,],[2,2,2,]),'args':([6,],[9,]),'statement':([8,10,17,18,31,59,70,96,97,],[13,20,31,34,59,59,93,99,100,]),'statementc':([8,10,18,70,96,97,],[14,21,35,92,98,101,]),'expression':([16,23,24,25,30,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,66,68,],[26,39,40,41,58,71,72,73,74,75,76,77,78,79,80,81,82,83,84,87,89,91,]),'statements':([17,31,59,],[32,61,61,]),'empty':([17,],[33,]),'argse':([23,57,],[38,86,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,34 +27,54 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> code","S'",1,None,None,None),
-  ('code -> function','code',1,'p_code','main.py',89),
-  ('code -> code code','code',2,'p_code','main.py',90),
-  ('function -> DEF NAME LPAREN RPAREN statement','function',5,'p_functionnoargs','main.py',96),
-  ('function -> DEF NAME LPAREN RPAREN statementc','function',5,'p_functionnoargs','main.py',97),
-  ('function -> DEF NAME LPAREN NAME RPAREN statement','function',6,'p_functiononearg','main.py',103),
-  ('function -> DEF NAME LPAREN NAME RPAREN statementc','function',6,'p_functiononearg','main.py',104),
-  ('function -> DEF NAME LPAREN args RPAREN statement','function',6,'p_functionmanyargs','main.py',110),
-  ('function -> DEF NAME LPAREN args RPAREN statementc','function',6,'p_functionmanyargs','main.py',111),
-  ('args -> args COMMA NAME','args',3,'p_args','main.py',127),
-  ('args -> NAME COMMA NAME','args',3,'p_argso','main.py',134),
-  ('argse -> argse COMMA expression','argse',3,'p_argse','main.py',140),
-  ('argse -> expression COMMA expression','argse',3,'p_argseo','main.py',147),
-  ('statement -> NAME LPAREN RPAREN SEMICOLON','statement',4,'p_st_fcallna','main.py',154),
-  ('statement -> NAME LPAREN argse RPAREN SEMICOLON','statement',5,'p_st_fcall','main.py',160),
-  ('statement -> NAME LPAREN expression RPAREN SEMICOLON','statement',5,'p_st_fcalla','main.py',166),
-  ('statements -> statement statements','statements',2,'p_statements','main.py',173),
-  ('statements -> statement statement','statements',2,'p_statements','main.py',174),
-  ('statementc -> LBRAC statement RBRAC','statementc',3,'p_statementc','main.py',180),
-  ('statementc -> LBRAC statements RBRAC','statementc',3,'p_statementc','main.py',181),
-  ('statementc -> LBRAC empty RBRAC','statementc',3,'p_statementc','main.py',182),
-  ('statement -> NAME EQUALS expression SEMICOLON','statement',4,'p_statementvardef','main.py',189),
-  ('statement -> RETURN expression SEMICOLON','statement',3,'p_statementreturn','main.py',194),
-  ('expression -> INT','expression',1,'p_expression_basic','main.py',200),
-  ('expression -> NAME','expression',1,'p_expression_basic','main.py',201),
-  ('expression -> STRING','expression',1,'p_expression_str','main.py',207),
-  ('expression -> expression MUL expression','expression',3,'p_expression_primitive','main.py',215),
-  ('expression -> expression DIV expression','expression',3,'p_expression_primitive','main.py',216),
-  ('expression -> expression PLUS expression','expression',3,'p_expression_primitive','main.py',217),
-  ('expression -> expression MINUS expression','expression',3,'p_expression_primitive','main.py',218),
-  ('empty -> <empty>','empty',0,'p_empty','main.py',228),
+  ('code -> function','code',1,'p_code','main.py',125),
+  ('code -> code code','code',2,'p_code','main.py',126),
+  ('function -> DEF NAME LPAREN RPAREN statement','function',5,'p_functionnoargs','main.py',132),
+  ('function -> DEF NAME LPAREN RPAREN statementc','function',5,'p_functionnoargs','main.py',133),
+  ('function -> DEF NAME LPAREN NAME RPAREN statement','function',6,'p_functiononearg','main.py',139),
+  ('function -> DEF NAME LPAREN NAME RPAREN statementc','function',6,'p_functiononearg','main.py',140),
+  ('function -> DEF NAME LPAREN args RPAREN statement','function',6,'p_functionmanyargs','main.py',146),
+  ('function -> DEF NAME LPAREN args RPAREN statementc','function',6,'p_functionmanyargs','main.py',147),
+  ('statement -> IF LPAREN expression RPAREN statementc','statement',5,'p_statement_if','main.py',153),
+  ('statement -> IF LPAREN expression RPAREN statement','statement',5,'p_statement_if','main.py',154),
+  ('statement -> IF LPAREN expression RPAREN statementc ELSE statementc','statement',7,'p_statement_ifelse','main.py',160),
+  ('statement -> IF LPAREN expression RPAREN statement ELSE statement','statement',7,'p_statement_ifelse','main.py',161),
+  ('statement -> IF LPAREN expression RPAREN statementc ELSE statement','statement',7,'p_statement_ifelse','main.py',162),
+  ('statement -> IF LPAREN expression RPAREN statement ELSE statementc','statement',7,'p_statement_ifelse','main.py',163),
+  ('args -> args COMMA NAME','args',3,'p_args','main.py',179),
+  ('args -> NAME COMMA NAME','args',3,'p_argso','main.py',186),
+  ('argse -> argse COMMA expression','argse',3,'p_argse','main.py',192),
+  ('argse -> expression COMMA expression','argse',3,'p_argseo','main.py',199),
+  ('statement -> NAME LPAREN RPAREN SEMICOLON','statement',4,'p_st_fcallna','main.py',206),
+  ('statement -> NAME LPAREN argse RPAREN SEMICOLON','statement',5,'p_st_fcall','main.py',212),
+  ('statement -> NAME LPAREN expression RPAREN SEMICOLON','statement',5,'p_st_fcalla','main.py',218),
+  ('statements -> statement statements','statements',2,'p_statements','main.py',224),
+  ('statements -> statement statement','statements',2,'p_statements','main.py',225),
+  ('statementc -> LBRAC statement RBRAC','statementc',3,'p_statementc','main.py',231),
+  ('statementc -> LBRAC statements RBRAC','statementc',3,'p_statementc','main.py',232),
+  ('statementc -> LBRAC empty RBRAC','statementc',3,'p_statementc','main.py',233),
+  ('statement -> NAME EQUALS expression SEMICOLON','statement',4,'p_statementvardef','main.py',240),
+  ('statement -> RETURN expression SEMICOLON','statement',3,'p_statementreturn','main.py',245),
+  ('expression -> INT','expression',1,'p_expression_basic','main.py',251),
+  ('expression -> NAME','expression',1,'p_expression_basic','main.py',252),
+  ('expression -> STRING','expression',1,'p_expression_str','main.py',258),
+  ('expression -> NOT expression','expression',2,'p_expression_unary','main.py',264),
+  ('expression -> NAME LPAREN RPAREN','expression',3,'p_e_fcallna','main.py',270),
+  ('expression -> NAME LPAREN argse RPAREN','expression',4,'p_e_fcall','main.py',276),
+  ('expression -> NAME LPAREN expression RPAREN','expression',4,'p_e_fcalla','main.py',282),
+  ('expression -> expression MUL expression','expression',3,'p_expression_primitive','main.py',292),
+  ('expression -> expression DIV expression','expression',3,'p_expression_primitive','main.py',293),
+  ('expression -> expression PLUS expression','expression',3,'p_expression_primitive','main.py',294),
+  ('expression -> expression MINUS expression','expression',3,'p_expression_primitive','main.py',295),
+  ('expression -> expression AND expression','expression',3,'p_expression_primitive','main.py',296),
+  ('expression -> expression AND2 expression','expression',3,'p_expression_primitive','main.py',297),
+  ('expression -> expression OR2 expression','expression',3,'p_expression_primitive','main.py',298),
+  ('expression -> expression OR expression','expression',3,'p_expression_primitive','main.py',299),
+  ('expression -> expression DNE expression','expression',3,'p_expression_primitive','main.py',300),
+  ('expression -> expression EQ expression','expression',3,'p_expression_primitive','main.py',301),
+  ('expression -> expression GRT expression','expression',3,'p_expression_primitive','main.py',302),
+  ('expression -> expression GRTE expression','expression',3,'p_expression_primitive','main.py',303),
+  ('expression -> expression LT expression','expression',3,'p_expression_primitive','main.py',304),
+  ('expression -> expression LTE expression','expression',3,'p_expression_primitive','main.py',305),
+  ('empty -> <empty>','empty',0,'p_empty','main.py',315),
 ]

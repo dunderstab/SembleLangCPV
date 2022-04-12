@@ -20,7 +20,9 @@ Description = " A Langauge designed for speed and simplicity. With accuracy and 
 
 reserved = {
     "return": "RETURN",
-    "def": "DEF"
+    "def": "DEF",
+    "if": "IF",
+    "else": "ELSE"
 }
 
 tokens = [
@@ -37,8 +39,19 @@ tokens = [
     "LPAREN",
     "RPAREN",
     "COMMA",
-    "STRING"
-] + list(reserved.values())
+    "STRING",
+    "NOT",
+    "AND",
+    "AND2",
+    "OR2",
+    "OR",
+    "DNE",
+    "EQ",
+    "GRT",
+    "GRTE",
+    "LT",
+    "LTE"
+,] + list(reserved.values())
 
 t_PLUS = r"\+"
 t_MINUS = r"\-"
@@ -51,6 +64,29 @@ t_RBRAC = r"\}"
 t_LPAREN = r"\("
 t_RPAREN = r"\)"
 t_COMMA = r"\,"
+
+t_AND2 = r"\&\&"
+t_AND = r'\&'
+
+t_OR2 = r"\|\|"
+t_OR = r'\|'
+
+t_NOT = r"\!"
+
+t_EQ = r"\=\="
+t_GRT = r"\>"
+
+GRTE1 = r"\>\="
+GRTE2 = r'\=\>'
+t_GRTE = r'(' + GRTE1 + r'|' + GRTE2 + r')'
+
+t_LT = r"\<"
+
+LTE1 = r"\<\="
+LTE2 = r'\=\<'
+t_LTE = r'(' + LTE1 + r'|' + LTE2 + r')'
+
+t_DNE = r"\!\="
 
 t_ignore = r" "
 
@@ -112,6 +148,22 @@ def p_functionmanyargs(p):
     '''
     p[0] = ("function", p[6], p[2], p[4], False)
 
+def p_statement_if(p):
+    '''
+    statement : IF LPAREN expression RPAREN statementc
+              | IF LPAREN expression RPAREN statement
+    '''
+    p[0] = ("if", p[3], p[5])
+
+def p_statement_ifelse(p):
+    '''
+    statement : IF LPAREN expression RPAREN statementc ELSE statementc
+                | IF LPAREN expression RPAREN statement ELSE statement
+                | IF LPAREN expression RPAREN statementc ELSE statement
+                | IF LPAREN expression RPAREN statement ELSE statementc
+    '''
+    p[0] = ("ifelse", p[3], p[5], p[7])
+
 def unpack(l):
     x = l[0]
     y = l[1]
@@ -166,7 +218,6 @@ def p_st_fcalla(p):
     statement : NAME LPAREN expression RPAREN SEMICOLON
     '''
     p[0] = ("fcall", p[1], [p[3]])
-    print(p[0])
 
 def p_statements(p):
     '''
@@ -208,6 +259,32 @@ def p_expression_str(p):
   '''
   p[0] = Str(p[1])
 
+def p_expression_unary(p):
+    '''
+    expression : NOT expression
+    '''
+    p[0] = (p[1], p[2])
+
+def p_e_fcallna(p):
+    '''
+    expression : NAME LPAREN RPAREN 
+    '''
+    p[0] = ("efcall", p[1], False)
+
+def p_e_fcall(p):
+    '''
+    expression : NAME LPAREN argse RPAREN
+    '''
+    p[0] = ("efcall", p[1], p[3])
+
+def p_e_fcalla(p):
+    '''
+    expression : NAME LPAREN expression RPAREN
+    '''
+    p[0] = ("efcall", p[1], [p[3]])
+
+
+
 
 
 def p_expression_primitive(p):
@@ -216,6 +293,16 @@ def p_expression_primitive(p):
                | expression DIV expression
                | expression PLUS expression
                | expression MINUS expression
+               | expression AND expression
+               | expression AND2 expression
+               | expression OR2 expression
+               | expression OR expression
+               | expression DNE expression
+               | expression EQ expression
+               | expression GRT expression
+               | expression GRTE expression
+               | expression LT expression
+               | expression LTE expression
     '''
     p[0] = (p[2], p[1], p[3])
 
@@ -301,12 +388,28 @@ def eval(p):
     global currentFunc, funcVars, funcVarCount, currentFuncVarVal, Lerrors, data, MPN
     if Lerrors:
         quit("Lexing error!")
+    if p == None:
+        return
+
+    print(p)
     
     if type(p) != tuple:
         if type(p) == int:
             asm("movl ${}, %ecx\n".format(p))
             return p
-        return p
+        elif type(p) == Str:
+            x = p.value
+            data["STRlock{}".format(MPN)] = ".asciz \"{}\"".format(x)
+            asm("movl ${}, %ecx".format("STRlock{}".format(MPN)))
+            MPN += 1
+            return 'str'
+
+        elif type(p) == str:
+            if p in funcVars:
+                asm("movl {}, %ecx".format(funcVars[p]))
+            else:
+                e_error("Variable '{}' referenced before assignment!".format(p))
+            return [p]
 
     if p[0] == "function":
         funcVars = {}
@@ -336,25 +439,72 @@ def eval(p):
         eval(p[2])
 
     elif p[0] == "fcall":
-        print(p)
         n = 0
         for i in Reverse(p[2]):
             n += 1
-            print(i)
             eval(i)
             asm("pushl %ecx")
-        #if p[1] in funcs.keys()
-        if True:
-            asm("call {}".format(p[1]))
-            for i in range(n):
-                asm("popl %ebx")
-        # else:
-        #    e_error("Function Error: Undefined function {}".format(p[1]))
+        #if p[1] in funcs.keys():
+        asm("call {}".format(p[1]))
+        for i in range(n):
+            asm("popl %ebx")
+       # else:
+         #   e_error("Function Error: Undefined function {}".format(p[1]))
     
     elif p[0] == "return":
         eval(p[1])
         asm("movl %ecx, %eax")
         asm("jmp .l{}".format(currentFunc))
+
+        
+
+    elif p[0] == "ifelse":
+        eval(p[1])
+        asm("cmpl $1, %ecx")
+        v = MPN
+        MPN += 1
+        asm("jne .ne{}".format(v))
+        
+        eval(p[2])
+        a = MPN
+        MPN += 1
+        asm("jmp .ne{}".format(a))
+
+
+        asm(".ne{}:".format(v))
+        eval(p[3])
+        asm(".ne{}:".format(a))
+        
+
+        
+
+        eval(p[1])
+
+
+
+    elif p[0] == "if":
+        eval(p[1])
+        asm("cmpl $1, %ecx")
+        a = MPN
+        MPN += 1
+        asm("jne .ne{}".format(a))
+        eval(p[2])
+
+        asm(".ne{}:".format(a))
+
+        eval(p[1])
+
+
+
+    elif p[0] == "if":
+        eval(p[1])
+        asm("cmpl $1, %ecx")
+        a = MPN
+        MPN += 1
+        asm("jne .ne{}".format(a))
+        eval(p[2])
+
+        asm(".ne{}:".format(a))
 
 
     elif p[0] == "def":
@@ -402,24 +552,191 @@ def eval(p):
             asm("popl %edx")
             asm("imull %ecx, %edx")
             asm("movl %edx, %ecx")
-
-    elif type(p) == int:
-        asm("movl ${}, %ecx".format(p))
-
-    elif type(p) == str:
-        if p in funcVars:
-            asm("movl {}, %ecx".format(funcVars[p]))
+    elif p[0] == "&":
+        if type(p[1]) == int and type(p[2]) == int:
+            asm("movl ${}, %ecx".format(p[1]))
+            asm("andl ${}, %ecx".format(p[2]))
         else:
-            e_error("Variable '{}' referenced before assignment!".format(p))
-        return [p]
-    
-    elif type(p) == Str:
-        x = p.value
-        data["STRlock{}".format(MPN)] = ".asciz \"{}\"".format(x)
-    
-        asm("movl ${}, %ecx".format("STRlock{}".format(MPN)))
+            eval(p[1])
+            asm("movl %ecx, %edx")
+            asm("pushl %edx")
+            eval(p[2])
+            asm("popl %edx")
+            asm("andl %ecx, %edx")
+            asm("movl %edx, %ecx")
+    elif p[0] == "&&":
+        #print(p)
+        eval(p[1])
+        asm("movl %ecx, %edx")
+        asm("pushl %edx")
+        eval(p[2])
+        asm("popl %edx")
+        asm("cmpl $1, %edx")
+        v = MPN
         MPN += 1
-        return 'str'
+        asm("jne .ne{}".format(v))
+        asm("cmpl $1, %ecx")
+        asm("jne .ne{}".format(v))
+        asm("jmp .ne{}".format(MPN))
+        asm(".ne{}:".format(v))
+        asm("movl $0, %ecx")
+        asm(".ne{}:".format(MPN))
+        MPN += 1
+    elif p[0] == "||":
+        #print(p)
+        eval(p[1])
+        asm("movl %ecx, %edx")
+        asm("pushl %edx")
+        eval(p[2])
+        asm("popl %edx")
+        asm("cmpl $1, %edx")
+        v = MPN
+        MPN += 1
+        a = MPN
+        MPN += 1
+        asm("je .ne{}".format(a))
+        asm("cmpl $1, %ecx")
+        asm("je .ne{}".format(a))
+        asm("movl $0, %ecx")
+        asm("jmp .ne{}".format(v))
+        asm(".ne{}:".format(a))
+        asm("movl $1, %ecx")
+        asm(".ne{}:".format(v))
+        MPN += 1
+    elif p[0] == "|":
+        if type(p[1]) == int and type(p[2]) == int:
+            asm("movl ${}, %ecx".format(p[1]))
+            asm("orl ${}, %ecx".format(p[2]))
+        else:
+            eval(p[1])
+            asm("movl %ecx, %edx")
+            asm("pushl %edx")
+            eval(p[2])
+            asm("popl %edx")
+            asm("orl %ecx, %edx")
+            asm("movl %edx, %ecx")
+
+    elif p[0] == "==":
+        eval(p[1])
+        asm("movl %ecx, %edx")
+        asm("pushl %edx")
+        eval(p[2])
+        asm("popl %edx")
+        asm("cmpl %ecx, %edx")
+        asm("jne .ne{}".format(MPN))
+        v = MPN
+        MPN += 1
+        asm("movl $1, %ecx")
+        asm("jmp .ne{}".format(MPN))
+        asm(".ne{}:".format(v))
+        asm("movl $0, %ecx")
+        asm(".ne{}:".format(MPN))
+        MPN += 1
+    elif p[0] == "!=":
+        eval(p[1])
+        asm("movl %ecx, %edx")
+        asm("pushl %edx")
+        eval (p[2])
+        asm("popl %edx")
+        asm("cmpl %ecx, %edx")
+        asm("je .ne{}".format(MPN))
+        v = MPN
+        MPN += 1
+        asm("movl $1, %ecx")
+        asm("jmp .ne{}".format(MPN))
+        asm(".ne{}:".format(v))
+        asm("movl $0, %ecx")
+        asm(".ne{}:".format(MPN))
+        MPN += 1
+
+    elif p[0] == ">":
+        eval(p[1])
+        asm("movl %ecx, %edx")
+        asm("pushl %edx")
+        eval(p[2])
+        asm("popl %edx")
+        asm("cmpl %ecx, %edx")
+        asm("jle .ne{}".format(MPN))
+        v = MPN
+        MPN += 1
+        asm("movl $1, %ecx")
+        asm("jmp .ne{}".format(MPN))
+        asm(".ne{}:".format(v))
+        asm("movl $0, %ecx")
+        asm(".ne{}:".format(MPN))
+        MPN += 1
+
+    elif p[0] == ">=" or p[0] == "=>": 
+        eval(p[1])
+        asm("movl %ecx, %edx")
+        asm("pushl %edx")
+        eval(p[2])
+        asm("popl %edx")
+        asm("cmpl %ecx, %edx")
+        asm("jl .ne{}".format(MPN))
+        v = MPN
+        MPN += 1
+        asm("movl $1, %ecx")
+        asm("jmp .ne{}".format(MPN))
+        asm(".ne{}:".format(v))
+        asm("movl $0, %ecx")
+        asm(".ne{}:".format(MPN))
+        MPN += 1
+
+    elif p[0] == "<":
+        eval(p[1])
+        asm("movl %ecx, %edx")
+        asm("pushl %edx")
+        eval(p[2])
+        asm("popl %edx")
+        asm("cmpl %ecx, %edx")
+        asm("jge .ne{}".format(MPN))
+        v = MPN
+        MPN += 1
+        asm("movl $1, %ecx")
+        asm("jmp .ne{}".format(MPN))
+        asm(".ne{}:".format(v))
+        asm("movl $0, %ecx")
+        asm(".ne{}:".format(MPN))
+        MPN += 1
+
+    elif p[0] == "<=" or p[0] == "=<": 
+        eval(p[1])
+        asm("movl %ecx, %edx")
+        asm("pushl %edx")
+        eval(p[2])
+        asm("popl %edx")
+        asm("cmpl %ecx, %edx")
+        asm("jg .ne{}".format(MPN))
+        v = MPN
+        MPN += 1
+        asm("movl $1, %ecx")
+        asm("jmp .ne{}".format(MPN))
+        asm(".ne{}:".format(v))
+        asm("movl $0, %ecx")
+        asm(".ne{}:".format(MPN))
+        MPN += 1
+    
+    elif p[0] == "!":
+        eval(p[1])
+        asm("notl %ecx")
+    
+    elif p[0] == "efcall":
+        n = 0
+        for i in Reverse(p[2]):
+            n += 1
+            eval(i)
+            asm("pushl %ecx")
+        #if p[1] in funcs.keys():
+        asm("call {}".format(p[1]))
+        for i in range(n):
+            asm("popl %ebx")
+        asm("movl %eax, %ecx")
+
+
+    
+    
+    
 
 def line_wrap(str, width=25):
     strs = []
@@ -495,8 +812,6 @@ def cmpf():
                 if funcVarCount[func] != 0:
                     file.write("\n\tsubl ${}, %esp".format(funcVarCount[func]))
             for line in funcs[func]:
-                if line.startswith("movl $0, "):
-                    line = "xorl " + line.replace("movl $0, ", "") + ", " + line.replace("movl $0, ", "")
                 file.write("\n\t" + line)
             if func not in ['_start']:
                 file.write("\n\t.l{}:".format(func))
