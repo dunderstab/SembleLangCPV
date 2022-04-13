@@ -44,6 +44,8 @@ tokens = [
     "AND",
     "AND2",
     "OR2",
+    "DPLUS",
+    "DMINUS",
     "OR",
     "DNE",
     "EQ",
@@ -55,6 +57,8 @@ tokens = [
 
 t_PLUS = r"\+"
 t_MINUS = r"\-"
+t_DPLUS = r"\+\+"
+t_DMINUS = r"\-\-"
 t_MUL = r"\*"
 t_DIV = r"\/"
 t_EQUALS = r"\="
@@ -91,7 +95,11 @@ t_DNE = r"\!\="
 t_ignore = r" "
 
 precedence = (
-    ("left", "PLUS", "MINUS"),
+    ("left", "AND2", "OR2"),
+    ("left", "NOT"),
+    ("left", "GRT", "EQ", "GRTE", "LT", "LTE", "DNE"),
+    ("left", "AND", "OR"),
+    ("left", "PLUS", "MINUS", "DPLUS", "DMINUS"),
     ("left", "MUL", "DIV")
 )
 
@@ -110,9 +118,6 @@ def t_INT(t):
     t.value = int(t.value)
     return t
 
-def t_COMMENT(t):
-    r'\/\*.*\*\/'
-    pass
 
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
@@ -163,6 +168,37 @@ def p_statement_ifelse(p):
                 | IF LPAREN expression RPAREN statement ELSE statementc
     '''
     p[0] = ("ifelse", p[3], p[5], p[7])
+
+def p_statement_dplus(p):
+    '''
+    statement : NAME DPLUS SEMICOLON
+                | NAME DMINUS SEMICOLON
+    '''
+    #print(p)
+    p[0] = (p[2] + "s", p[1])
+
+
+def p_statement_pdplus(p):
+  '''
+  statement : DPLUS NAME SEMICOLON
+            | DMINUS NAME SEMICOLON
+  '''
+  p[0] = (p[1] + "s", p[2])
+
+
+def p_expression_dplus(p):
+  '''
+  expression : NAME DPLUS
+             | NAME DMINUS
+  '''
+  p[0] = (p[2], p[1])
+
+def p_expression_dplusp(p):
+  '''
+  expression : DPLUS NAME
+             | DMINUS NAME
+  '''
+  p[0] = (p[1] + "p", p[2])
 
 def unpack(l):
     x = l[0]
@@ -218,6 +254,7 @@ def p_st_fcalla(p):
     statement : NAME LPAREN expression RPAREN SEMICOLON
     '''
     p[0] = ("fcall", p[1], [p[3]])
+
 
 def p_statements(p):
     '''
@@ -564,6 +601,40 @@ def eval(p):
             asm("popl %edx")
             asm("andl %ecx, %edx")
             asm("movl %edx, %ecx")
+    
+    elif p[0] == "--":
+        if p[1] in funcVars:
+            asm("movl {}, %ecx".format(funcVars[p[1]]))
+            asm("decl {}".format(funcVars[p[1]]))
+        else:
+            e_error("Variable '{}' referenced before assignment!".format(p[1]))
+
+    elif p[0] == "++s":
+        if p[1] in funcVars:
+            asm("incl {}".format(funcVars[p[1]]))
+        else:
+            e_error("Variable '{}' referenced before assignment!".format(p[1]))
+
+    elif p[0] == "--s":
+        if p[1] in funcVars:
+            asm("decl {}".format(funcVars[p[1]]))
+        else:
+            e_error("Variable '{}' referenced before assignment!".format(p[1]))
+
+    elif p[0] == "++p":
+        if p[1] in funcVars:
+            asm("incl {}".format(funcVars[p[1]]))
+            asm("movl {}, %ecx".format(funcVars[p[1]]))
+        else:
+            e_error("Variable '{}' referenced before assignment!".format(p[1]))
+
+    elif p[0] == "--p":
+        if p[1] in funcVars:
+            asm("decl {}".format(funcVars[p[1]]))
+            asm("movl {}, %ecx".format(funcVars[p[1]]))
+        else:
+            e_error("Variable '{}' referenced before assignment!".format(p[1]))
+
     elif p[0] == "&&":
         #print(p)
         eval(p[1])
