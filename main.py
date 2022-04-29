@@ -1,7 +1,7 @@
 import ply.lex as lex
 import ply.yacc as yacc
 import os
-import warnings
+import warning
 
 OUTPUT_FILE = "main"
 Lerrors = False
