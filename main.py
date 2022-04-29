@@ -14,7 +14,8 @@ currentVersion = "1.1.2"
 Beta = "beta"
 Author = "Riley"
 Name = "SembleLang"
-Description = " A Langauge designed for speed and simplicity. With accuracy and flexibility in mind I hand-crafted this language from the ground up to provide an easy way to get into high-speed coding."
+#Description = " A Langauge designed for speed and simplicity. With accuracy and flexibility in mind I hand-crafted this language from the ground up to provide an easy way to get into high-speed coding."
+Description = "\n"
 
 # CODE
 
@@ -22,7 +23,14 @@ reserved = {
     "return": "RETURN",
     "def": "DEF",
     "if": "IF",
-    "else": "ELSE"
+    "else": "ELSE",
+    "while": "WHILE",
+    "for": "FOR",
+    "break": "BREAK",
+    "var": "VAR",
+    "const": "CONST",
+    "is_arr": "ISARR",
+    "len_arr":"ARRLEN",
 }
 
 tokens = [
@@ -52,7 +60,10 @@ tokens = [
     "GRT",
     "GRTE",
     "LT",
-    "LTE"
+    "LTE",
+    "LBRACE",
+    "RBRACE",
+    "COLON"
 ,] + list(reserved.values())
 
 t_PLUS = r"\+"
@@ -67,6 +78,9 @@ t_LBRAC = r"\{"
 t_RBRAC = r"\}"
 t_LPAREN = r"\("
 t_RPAREN = r"\)"
+t_LBRACE = r"\["
+t_RBRACE = r"\]"
+t_COLON = r"\:"
 t_COMMA = r"\,"
 
 t_AND2 = r"\&\&"
@@ -102,6 +116,16 @@ precedence = (
     ("left", "PLUS", "MINUS", "DPLUS", "DMINUS"),
     ("left", "MUL", "DIV")
 )
+
+class SEMBLE_ARRAY:
+    def __init__(self, len, vals):
+        self.len = len
+        self.vals = vals
+    def __repr__(self):
+        return "SEMBLE_ARRAY(len={}, vals={});".format(self.len, self.vals)
+    def __str__(self):
+        return "SEMBLE_ARRAY(len={}, vals={});".format(self.len, self.vals)
+
 
 def t_STRING(t):
     r'\"[^\"]*\"'
@@ -169,6 +193,24 @@ def p_statement_ifelse(p):
     '''
     p[0] = ("ifelse", p[3], p[5], p[7])
 
+def p_statement_for(p):
+  '''
+  statement : FOR LPAREN statement expression SEMICOLON statement RPAREN statementc
+            | FOR LPAREN statement expression SEMICOLON statement RPAREN statement
+  '''
+  p[0] = ("for", p[4], p[3], p[6], p[8])
+  
+
+
+def p_statement_while(p):
+  '''
+  statement : WHILE LPAREN expression RPAREN statementc
+            | WHILE LPAREN expression RPAREN statement
+  '''
+  p[0] = ("while", p[3], p[5])
+
+
+
 def p_statement_dplus(p):
     '''
     statement : NAME DPLUS SEMICOLON
@@ -230,6 +272,13 @@ def p_argse(p):
   #print("!!! {} ".format(p[1]))
   p[0] = unpack(p[1]) + [p[3]]
 
+def p_statement_break(p):
+  '''
+  statement : BREAK SEMICOLON
+  '''
+  
+  p[0] = ("break", p[1])
+
 def p_argseo(p):
   '''
   argse : expression COMMA expression
@@ -271,12 +320,63 @@ def p_statementc(p):
     '''
     p[0] = ("statementc", p[2])
 
+def p_expression_arr(p):
+    '''
+    expression : expression COLON LBRACE argse RBRACE
+    '''
+    p[0] = SEMBLE_ARRAY(p[1], p[4])
+
+def p_expression_arrone(p):
+    '''
+    expression : expression COLON LBRACE expression RBRACE
+    '''
+    p[0] = SEMBLE_ARRAY(p[1], [p[4]])
+
+def p_expression_arrno(p):
+    '''
+    expression : expression COLON LBRACE RBRACE
+    '''
+    p[0] = SEMBLE_ARRAY(p[1], None)
+
+def p_expression_arra(p):
+    '''
+    expression : LBRACE argse RBRACE
+    '''
+    p[0] = SEMBLE_ARRAY(len(p[2]), p[2])
+
+def p_expression_arronea(p):
+    '''
+    expression : LBRACE expression RBRACE
+    '''
+    p[0] = SEMBLE_ARRAY(1, [p[2]])
+
+def p_expression_arrnoa(p):
+    '''
+    expression : LBRACE RBRACE
+    '''
+    p[0] = SEMBLE_ARRAY(1, None)
+
 
 def p_statementvardef(p):
     '''
+    statement : VAR NAME EQUALS expression SEMICOLON
+    '''
+    p[0] = ("def", p[2], p[4])
+
+def p_statementvup(p):
+    '''
     statement : NAME EQUALS expression SEMICOLON
     '''
-    p[0] = ("def", p[1], p[3])
+    p[0] = ("vup", p[1], p[3])
+
+def p_statement_indexassign(p):
+  '''
+  statement : expression LBRACE expression RBRACE EQUALS expression SEMICOLON
+  '''
+  p[0] = ("indexingassign", p[1], p[3], p[6])
+
+
+
 def p_statementreturn(p):
     '''
     statement : RETURN expression SEMICOLON
@@ -290,6 +390,12 @@ def p_expression_basic(p):
     '''
     p[0] = p[1]
 
+def p_expression_indexing(p):
+    '''
+    expression : expression LBRACE expression RBRACE
+    '''
+    p[0] = ("indexing", p[1], p[3])
+
 def p_expression_str(p):
   '''
   expression : STRING
@@ -301,6 +407,20 @@ def p_expression_unary(p):
     expression : NOT expression
     '''
     p[0] = (p[1], p[2])
+
+def p_expression_carr(p):
+    '''
+    expression : ISARR LPAREN expression RPAREN
+    '''
+    p[0] = ("isarr", p[3])
+
+def p_expression_larr(p):
+    '''
+    expression : ARRLEN LPAREN expression RPAREN
+    '''
+    p[0] = ("arrlen", p[3])
+
+
 
 def p_e_fcallna(p):
     '''
@@ -319,6 +439,8 @@ def p_e_fcalla(p):
     expression : NAME LPAREN expression RPAREN
     '''
     p[0] = ("efcall", p[1], [p[3]])
+
+
 
 
 
@@ -398,6 +520,9 @@ data = {}
 currentFuncVarVal = 4
 funcVarCount = {}
 
+jumpStack = []
+globalvars = {}
+
 def grabTup(tup):
   x = []
   for i in tup:
@@ -419,16 +544,15 @@ def asm(s):
         e_error("Must be inside a function to execute code!")
 
 def e_error(e):
-  quit("Eval error: {}".format(e))
+  quit("Semble: EvalError: {}".format(e))
 
 def eval(p):
-    global currentFunc, funcVars, funcVarCount, currentFuncVarVal, Lerrors, data, MPN
+    global currentFunc, funcVars, funcVarCount, currentFuncVarVal, Lerrors, data, MPN, jumpStack, globalvars, _ADD_START_LINES
     if Lerrors:
         quit("Lexing error!")
     if p == None:
         return
 
-    print(p)
     
     if type(p) != tuple:
         if type(p) == int:
@@ -447,6 +571,28 @@ def eval(p):
             else:
                 e_error("Variable '{}' referenced before assignment!".format(p))
             return [p]
+        elif type(p) == SEMBLE_ARRAY:
+            eval(("efcall", "malloc", [("+", ("*", p.len, 4), 8)]))
+            asm("movl %ecx, %edi")
+            
+            eval(Str("_!_SLA"))
+            asm("movl %ecx, {}(%edi)".format(4))
+            eval(p.len)
+            asm("movl %ecx, {}(%edi) # DJJJJ".format(8))
+            if p.vals != None:
+                count = 12
+                print(p.vals)
+                for ele in p.vals:
+                    asm("pushl %edi")
+                    eval(ele)
+                    asm("popl %edi")
+                    asm("movl %ecx, {}(%edi)".format(count))
+                    count += 4
+            asm("movl %edi, %ecx")
+            return
+
+
+
 
     if p[0] == "function":
         funcVars = {}
@@ -466,10 +612,35 @@ def eval(p):
         else:
           funcArgs[currentFunc] = 8          
         eval(p[1])
+
+        
+
     
+    
+    elif p[0] == "farri":
+        eval(p[1])
+        asm("pushl %ecx")
+        eval(0)
+        asm("popl %edx")
+        asm("movl (%edx,%ecx, 4), %ebx")
+        asm("movl %ebx, %ecx")
+
+
+    elif p[0] == "isarr":
+        eval(("+", ("efcall", "strcmp", [Str("_!_SLA"), ("farri", p[1])]), 1))
+    
+    elif p[0] == "arrlen":
+        eval(p[1])
+        asm("pushl %ecx")
+        eval(1)
+        asm("popl %edx")
+        asm("movl (%edx,%ecx, 4), %ebx")
+        asm("movl %ebx, %ecx")
+
 
     elif p[0] == "statementc":
         eval(p[1])
+
 
     elif p[0] == "statements":
         eval(p[1])
@@ -518,18 +689,15 @@ def eval(p):
         eval(p[1])
 
 
+    elif p[0] == "break":
+        if jumpStack != []:
+            x = jumpStack[-1]
 
-    elif p[0] == "if":
-        eval(p[1])
-        asm("cmpl $1, %ecx")
-        a = MPN
-        MPN += 1
-        asm("jne .ne{}".format(a))
-        eval(p[2])
+            asm("jmp {} # break".format(x))
 
-        asm(".ne{}:".format(a))
-
-        eval(p[1])
+            del jumpStack[-1]
+        else:
+            e_error("Break condition in non-loop!")
 
 
 
@@ -543,12 +711,86 @@ def eval(p):
 
         asm(".ne{}:".format(a))
 
+    elif p[0] == "for":
+        eval(p[2])
+        eval(p[1])
+        asm("cmpl $1, %ecx")
+        a = MPN
+        MPN += 1
+        asm("jne .ne{}".format(a))
 
-    elif p[0] == "def":
+        d = MPN
+        MPN += 1
+        asm(".ne{}:".format(d))
+        jumpStack.append(".ne{}".format(a))
+        
+        eval(p[4])
+
+
+        eval(p[3])
+        eval(p[1])
+        asm("cmpl $1, %ecx")
+        asm("jne .ne{}".format(a))
+        asm("jmp .ne{}".format(d))
+        asm(".ne{}:".format(a))
+
+    elif p[0] == "while":
+        eval(p[1])
+        asm("cmpl $1, %ecx")
+        a = MPN
+        MPN += 1
+        asm("jne .ne{}".format(a))
+
+        d = MPN
+        MPN += 1
+        asm(".ne{}:".format(d))
+        jumpStack.append(".ne{}".format(a))
+        
+        eval(p[2])
+
+
+
+        eval(p[1])
+        asm("cmpl $1, %ecx")
+        asm("jne .ne{}".format(a))
+        asm("jmp .ne{}".format(d))
+        asm(".ne{}:".format(a))
+    elif p[0] == "vup":
         if p[1] in funcVars:
             x = funcVars[p[1]]
             t = eval(p[2])
             asm("movl %ecx, {} # variable {}".format(x, p[1]))
+        else:
+            e_error("Unknown Variable ?")
+    
+    elif p[0] == "indexingassign":
+      print("pp {}".format(p))
+      eval(p[1])
+      asm("pushl %ecx")
+      eval(p[2])
+      asm("pushl %ecx")
+      eval(p[3])
+      asm("movl %ecx, %esi")
+      asm("popl %ecx")
+      asm("addl $2, %ecx")
+      asm("popl %edx")
+      asm("movl %esi, (%edx,%ecx, 4)")
+
+    elif p[0] == "indexing":
+        print(p[1])
+        print(p[2])
+        eval(p[1])
+        asm("pushl %ecx")
+        eval(p[2])
+        asm("popl %edx")
+        asm("addl $2, %ecx")
+        asm("movl (%edx,%ecx, 4), %ebx")
+        asm("movl %ebx, %ecx")
+
+
+    elif p[0] == "def":
+        if p[1] in funcVars:
+            e_error("Variable ? already defined!")
         else:
             t = eval(p[2])
             x = "-{}(%ebp)".format(currentFuncVarVal)
@@ -601,6 +843,13 @@ def eval(p):
             asm("popl %edx")
             asm("andl %ecx, %edx")
             asm("movl %edx, %ecx")
+
+    elif p[0] == "++":
+        if p[1] in funcVars:
+            asm("movl {}, %ecx".format(funcVars[p[1]]))
+            asm("incl {}".format(funcVars[p[1]]))
+        else:
+            e_error("Variable '{}' referenced before assignment!".format(p[1]))
     
     elif p[0] == "--":
         if p[1] in funcVars:
@@ -807,7 +1056,7 @@ def eval(p):
 
     
     
-    
+imports = []
 
 def line_wrap(str, width=25):
     strs = []
@@ -823,7 +1072,14 @@ def line_wrap(str, width=25):
 def code(fi):
     codeStr = ""
     with open(fi, "r") as file:
+        
         for line in file:
+            if line.startswith("#include"):
+                line = line.replace("\n", "")
+                l = line.replace("#include ", "")
+                if l not in imports:
+                    codeStr += " " + code("lib/{}.smb".format(l))
+                    imports.append(l)
             line = line.strip().replace("\t", "") + "\n"
             codeStr += line + " "
     return codeStr
@@ -841,8 +1097,14 @@ while True:
     with open("lex.out", "a") as lexout:
       lexout.write(str(tok) + "\n")
 
+def addListStr(list, delimiter=""):
+    x = ""
+    for i in list:
+        x += i + delimiter
+    return x
+
 def cmpf():
-    global currentVersion, Beta, Author, Name, Description, data
+    global currentVersion, Beta, Author, Name, Description, data, _ADD_START_LINES
     _startInclude = True
     if "main" not in funcs.keys():
         _startInclude = False
@@ -861,7 +1123,7 @@ def cmpf():
         
 
 
-        file.write("\n\n\n.section .data\n\n\n")
+        file.write("\n\n\n.section .text\n\n\n")
         #for i in data:
         #    file.write('\n{}:'.format(i))
         #    file.write("\n\t{}".format(data[i]))
@@ -872,7 +1134,7 @@ def cmpf():
         #    file.write("\n\n\n")
     
         if '_start' not in funcs.keys() and _startInclude:
-            file.write("\n.globl _start\n\n_start:\n\tcall main\n\tmovl %eax, %ebx\n\tmovl $1, %eax\n\tint $0x80")
+            file.write("\n.globl _start\n\n_start:\n\t\n\tcall main\n\tmovl %eax, %ebx\n\tmovl $1, %eax\n\tint $0x80")
         for func in funcs:
             if func not in ['_start']:
                 file.write("\n.type {}, @function".format(func))

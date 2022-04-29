@@ -1,6 +1,35 @@
 
-def main() {
-    x = 5;
-    ++x;
-    return x;
+
+def printArray(len, arr) {
+    printf("Hello World\n");
+    if (is_arr(arr)) {
+        printf("Hello World\n");
+    }
+    printf("Hello World\n");
+    printf("is_arr = %d\n");
+    printf("lenarr = %d\n", len_arr(arr));
+    for (var i = 0; i < len; i++;) {
+        printf("[\n");
+        if (i != len - 1) {
+             printf("%d, ", arr[i]);
+        } else {
+             if (is_arr(arr[i])) {
+                 printArray(arr[i]);
+                 printf(",\n");
+             } 
+        }
+            
+    }
+    printf("]\n");
 }
+
+def main() {
+    printf("Hello World\n");
+    var testArr = [1, [1, 2, 3], 3, 4, 5];
+    printf("Hello World\n");
+    printArray(5, testArr);
+    printf("Hello World\n");
+
+    return 0;
+}
+

@@ -1,0 +1,3 @@
+def is_array(arr) {
+    return arr?(arr);
+}
